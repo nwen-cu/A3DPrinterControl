@@ -1,0 +1,146 @@
+﻿<Window x:Class="A3DPrinterControl.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:A3DPrinterControl"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="768" Width="1024">
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="*"/>
+		</Grid.RowDefinitions>
+
+		<Ribbon Grid.Row="0">
+			<Ribbon.QuickAccessToolBar>
+				<RibbonQuickAccessToolBar>
+					<RibbonButton Content="Test"/>
+				</RibbonQuickAccessToolBar>
+			</Ribbon.QuickAccessToolBar>
+
+			<Ribbon.ApplicationMenu>
+				<RibbonApplicationMenu>
+					<RibbonApplicationMenuItem Header="Save"/>
+				</RibbonApplicationMenu>
+			</Ribbon.ApplicationMenu>
+
+			<RibbonTab Header="Home">
+				<RibbonGroup Header="Execution">
+					<RibbonButton  Label="Connect" IsEnabled="False"/>
+					<RibbonButton  Label="Compile"/>
+					<RibbonButton  Label="Run" IsEnabled="False"/>
+					<RibbonButton  Label="Stop" IsEnabled="False"/>
+				</RibbonGroup>
+				<RibbonGroup Header="Position"></RibbonGroup>
+				<RibbonGroup Header="Canvas">
+					<RibbonTextBox x:Name="CanvasWidthBox" Label="Width" TextChanged="CanvasWidth_TextChanged"/>
+					<RibbonTextBox x:Name="CanvasHeightBox" Label="Height" TextChanged="CanvasHeight_TextChanged"/>
+				</RibbonGroup>
+				<RibbonGroup Header="Devices"></RibbonGroup>
+			</RibbonTab>
+
+			<RibbonTab Header="Recipe">
+				<RibbonGroup Header="Import">
+
+				</RibbonGroup>
+				<RibbonGroup Header="Primitives">
+					<RibbonButton Label="Line"/>
+					<RibbonButton Label="Rectangle" Click="PrimitiveRectangle_Click"/>
+				</RibbonGroup>
+				<RibbonGroup Header="Flow Control">
+
+				</RibbonGroup>
+				<RibbonGroup Header="Device Control">
+
+				</RibbonGroup>
+			</RibbonTab>
+
+			<RibbonTab Header="Python">
+				<RibbonGroup Header="Core Functions">
+					<RibbonComboBox x:Name="PyScriptInfill" Label="Infill Gen"></RibbonComboBox>
+				</RibbonGroup>
+			</RibbonTab>
+		</Ribbon>
+
+		<DockPanel Grid.Row="1">
+			<StatusBar DockPanel.Dock="Bottom">
+				<StatusBarItem>Ready(not really)</StatusBarItem>
+			</StatusBar>
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="2*"></ColumnDefinition>
+					<ColumnDefinition Width="Auto"></ColumnDefinition>
+					<ColumnDefinition Width="7*"></ColumnDefinition>
+					<ColumnDefinition Width="Auto"></ColumnDefinition>
+					<ColumnDefinition Width="2*"></ColumnDefinition>
+				</Grid.ColumnDefinitions>
+
+				<DockPanel Grid.Column="0" MinWidth="100">
+					<TabControl DockPanel.Dock="Top">
+						<TabItem Header="Recipe">
+							<ListView x:Name="RecipeView">
+								
+							</ListView>
+						</TabItem>
+						<TabItem Header="Timeline">
+							<ScrollViewer HorizontalScrollBarVisibility="Visible">
+								<StackPanel Orientation="Horizontal">
+									<StackPanel>
+										<Label>Main</Label>
+										<ListView></ListView>
+									</StackPanel>
+								</StackPanel>
+							</ScrollViewer>
+						</TabItem>
+
+					</TabControl>
+
+				</DockPanel>
+
+				<GridSplitter Grid.Column="1" Width="7" VerticalAlignment="Stretch" HorizontalAlignment="Center" ShowsPreview="False"></GridSplitter>
+
+				<Grid x:Name="CanvasViewport" Grid.Column="2" ClipToBounds="True" Background="Gray">
+					<Canvas x:Name="CanvasContainer" Width="320" Height="220" Margin="0,0,0,0" Background="White">
+						<Canvas x:Name="MainCanvas" Canvas.Left="10" Canvas.Bottom="10"></Canvas>
+						<Grid x:Name="Axes" Canvas.Left="10" Canvas.Bottom="10">
+							<Rectangle x:Name="BoundingBox" Stroke="SlateGray" Width="300" Height="200"/>
+							<Line x:Name="AxisX"  X1="0" Y1="0" X2="0" Y2="50" Stroke="Red" VerticalAlignment="Bottom" HorizontalAlignment="Left"/>
+							<Line x:Name="AxisZ" X1="30" Y1="30" X2="0" Y2="50" Stroke="Green" Visibility="Hidden" VerticalAlignment="Bottom" HorizontalAlignment="Left"/>
+							<Line x:Name="AxisY" X1="0" Y1="50" X2="50" Y2="50" Stroke="Blue" VerticalAlignment="Bottom" HorizontalAlignment="Left"/>
+						</Grid>
+					</Canvas>
+				</Grid>
+				
+				
+
+					<GridSplitter Grid.Column="3" Width="7" VerticalAlignment="Stretch" HorizontalAlignment="Center" ShowsPreview="False"></GridSplitter>
+
+				<Grid Grid.Column="4">
+					<Grid.RowDefinitions>
+						<RowDefinition/>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition/>
+					</Grid.RowDefinitions>
+					<ListView x:Name="ShapesView">
+						
+					</ListView>
+					<GridSplitter Grid.Row="1" Height="5" VerticalAlignment="Center" HorizontalAlignment="Stretch" ShowsPreview="False"/>
+					<DockPanel Grid.Row="2" MinWidth="100">
+						<TabControl DockPanel.Dock="Top">
+							<TabItem Header="Options">
+								<Grid x:Name="CommandOptionPanel">
+
+								</Grid>
+							</TabItem>
+						</TabControl>
+					</DockPanel>
+				</Grid>
+				
+
+			</Grid>
+
+		</DockPanel>
+
+	</Grid>
+</Window>

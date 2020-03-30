@@ -1,0 +1,54 @@
+﻿<UserControl x:Class="A3DPrinterControl.ActionCommandOptionViews.LineShapeCommandOptionView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:A3DPrinterControl.ActionCommandOptionViews"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="300">
+	<ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+		<StackPanel>
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="1*"/>
+					<ColumnDefinition Width="1*"/>
+					<ColumnDefinition Width="1*"/>
+					<ColumnDefinition Width="1*"/>
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+				</Grid.RowDefinitions>
+
+				<TextBlock Grid.Row="0"/>
+				
+				<Label Content="Name" Grid.Row="1"/>
+				<TextBox Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="1"/>
+				
+				<TextBlock Grid.Row="2"/>
+
+				<Label Content="Position" Grid.Row="3"/>
+				<TextBox Grid.Row="3" Grid.Column="1"/>
+				<TextBox Grid.Row="3" Grid.Column="2"/>
+				<TextBox Grid.Row="3" Grid.Column="3"/>
+
+				<Label Content="Scale" Grid.Row="4"/>
+				<TextBox Grid.Row="4" Grid.Column="1"/>
+				<TextBox Grid.Row="4" Grid.Column="2"/>
+				<TextBox Grid.Row="4" Grid.Column="3"/>
+				
+				<Label Content="Rotation" Grid.Row="5"/>
+				<TextBox Grid.Row="5" Grid.Column="1"/>
+				<TextBox Grid.Row="5" Grid.Column="2"/>
+				<TextBox Grid.Row="5" Grid.Column="3"/>
+			</Grid>
+			
+			<Label Width="10000"/>
+			
+		</StackPanel>
+	</ScrollViewer>
+</UserControl>
