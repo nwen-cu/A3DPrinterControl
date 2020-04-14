@@ -4,12 +4,13 @@ using System.Text;
 using System.Numerics;
 using System.Windows.Shapes;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace A3DPrinterControl
 {
 	public static class CADCanvas
 	{
-		public static Grid Viewport;
+		public static ScrollViewer Viewport;
 		public static Canvas Container;
 		public static Canvas MainCanvas;
 		public static Grid Axes;
@@ -47,6 +48,19 @@ namespace A3DPrinterControl
 				MainCanvas.Height = value;
 			}
 		}
+		public static double CanvasZoom
+		{
+			get 
+			{
+				return (Container.RenderTransform as ScaleTransform).ScaleX;
+			}
+			set
+			{
+				Container.RenderTransformOrigin = new System.Windows.Point(0.5, 0.5);
+				Container.RenderTransform = new ScaleTransform(value, value);
+			}
+		}
+
 		public static double ViewportOffsetX { get; set; }
 		public static double ViewportOffsetY { get; set; }
 		public static double ViewportWidth { get => Viewport.ActualWidth; }
@@ -58,7 +72,7 @@ namespace A3DPrinterControl
 
 		static CADCanvas()
 		{
-			Viewport = MainWindow.Instance.FindName("CanvasViewport") as Grid;
+			Viewport = MainWindow.Instance.FindName("CanvasViewport") as ScrollViewer;
 			Container = MainWindow.Instance.FindName("CanvasContainer") as Canvas;
 			MainCanvas = MainWindow.Instance.FindName("MainCanvas") as Canvas;
 			Axes = MainWindow.Instance.FindName("Axis") as Grid;

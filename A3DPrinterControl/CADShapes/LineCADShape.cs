@@ -29,12 +29,27 @@ namespace A3DPrinterControl
 
 		public event PropertyChangedEventHandler PropertyChanged;
 
+		public void AddAuxiliaryLine(AuxiliaryLine line)
+		{
+			throw new NotImplementedException();
+		}
+
+		public void ClearAuxiliaryLine(AuxiliaryLine line)
+		{
+			throw new NotImplementedException();
+		}
+
 		public void OnDeselect()
 		{
 			throw new NotImplementedException();
 		}
 
 		public void OnSelect()
+		{
+			throw new NotImplementedException();
+		}
+
+		public void RemoveAuxiliaryLine(AuxiliaryLine line)
 		{
 			throw new NotImplementedException();
 		}

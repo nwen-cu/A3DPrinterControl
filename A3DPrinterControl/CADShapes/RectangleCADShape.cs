@@ -49,7 +49,6 @@ namespace A3DPrinterControl
 			{
 				(ShapeControl.RenderTransform as RotateTransform).Angle = value;
 				(AuxiliaryLineContainer.RenderTransform as RotateTransform).Angle = value;
-				MessageBox.Show(string.Join('=', Vertices));
 				OnPropertyChanged("Rotation");
 			}
 		}
@@ -97,13 +96,12 @@ namespace A3DPrinterControl
 				List<Point> vertices = new List<Point>();
 
 				Point origin = new Point(PositionX, PositionY);
-				Point destination = ShapeControl.RenderTransform.Inverse.Transform(origin);
 				System.Windows.Vector refVector = new System.Windows.Vector(origin.X, origin.Y);
-				vertices.Add(ShapeControl.RenderTransform.Inverse.Transform(origin));
+				vertices.Add(origin);
 				vertices.Add(ShapeControl.RenderTransform.Inverse.Transform(new Point(ScaleX, 0)) + refVector);
 				vertices.Add(ShapeControl.RenderTransform.Inverse.Transform(new Point(ScaleX, ScaleY)) + refVector);
 				vertices.Add(ShapeControl.RenderTransform.Inverse.Transform(new Point(0, ScaleY)) + refVector);
-				vertices.Add(destination);
+				vertices.Add(origin);
 				return vertices;
 			}
 		}
@@ -145,6 +143,21 @@ namespace A3DPrinterControl
 		public void OnSelect()
 		{
 			ShapeControl.Stroke = Brushes.Blue;
+		}
+
+		public void AddAuxiliaryLine(AuxiliaryLine line)
+		{
+			throw new NotImplementedException();
+		}
+
+		public void RemoveAuxiliaryLine(AuxiliaryLine line)
+		{
+			throw new NotImplementedException();
+		}
+
+		public void ClearAuxiliaryLine(AuxiliaryLine line)
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

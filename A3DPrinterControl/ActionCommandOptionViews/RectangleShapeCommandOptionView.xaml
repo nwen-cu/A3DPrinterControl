@@ -39,7 +39,7 @@
 				<TextBox Grid.Row="4" Grid.Column="2" Text="{Binding Shape.ScaleX}"/>
 				<TextBox Grid.Row="4" Grid.Column="3" Text="{Binding Shape.ScaleY}"/>
 
-				<Label Content="Rotation↶" Grid.Row="5"/>
+				<Label Content="Rotation↷" Grid.Row="5"/>
 				<TextBox Grid.Row="5" Grid.Column="2" Grid.ColumnSpan="2" Text="{Binding Shape.Rotation}"/>
 			</Grid>
 

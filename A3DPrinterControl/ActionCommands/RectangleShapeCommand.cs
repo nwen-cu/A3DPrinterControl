@@ -8,7 +8,19 @@ namespace A3DPrinterControl
 {
 	public class RectangleShapeCommand : IShapeCommand
 	{
-		public string DescriptionName { get; set; } = "Rectangle";
+		private string _descriptionName = "Rectangle";
+		public string DescriptionName
+		{
+			get
+			{
+				return _descriptionName;
+			}
+			set
+			{
+				_descriptionName = value;
+				OnPropertyChanged("DescriptionName");
+			}
+		}
 
 		public ICADShape Shape { get; }
 
@@ -47,7 +59,10 @@ namespace A3DPrinterControl
 			RecipeViewItem.Tag = this;
 			RecipeViewItem.Content = new StackPanel() { Orientation = Orientation.Horizontal };
 			(RecipeViewItem.Content as StackPanel).Children.Add(new Grid() { Width = 16, Height = 16, Background = System.Windows.Media.Brushes.Blue });
-			(RecipeViewItem.Content as StackPanel).Children.Add(new TextBlock() { Text = DescriptionName });
+			TextBlock text = new TextBlock();
+			text.SetBinding(TextBlock.TextProperty, "DescriptionName");
+			text.DataContext = this;
+			(RecipeViewItem.Content as StackPanel).Children.Add(text);
 			RecipeViewItem.Selected += RecipeViewItem_Selected;
 		}
 

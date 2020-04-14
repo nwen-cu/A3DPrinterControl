@@ -36,6 +36,19 @@
 				<RibbonGroup Header="Canvas">
 					<RibbonTextBox x:Name="CanvasWidthBox" Label="Width" TextChanged="CanvasWidth_TextChanged"/>
 					<RibbonTextBox x:Name="CanvasHeightBox" Label="Height" TextChanged="CanvasHeight_TextChanged"/>
+					<RibbonComboBox x:Name="CanvasZoomBox" Label="Zoom" IsEditable="True" >
+						<RibbonGallery SelectedValue="100%" SelectedValuePath="Content" SelectionChanged="RibbonGallery_SelectionChanged" MaxColumnCount="1">
+							<RibbonGalleryCategory>
+								<RibbonGalleryItem Content="25%"/>
+								<RibbonGalleryItem Content="50%"/>
+								<RibbonGalleryItem Content="75%"/>
+								<RibbonGalleryItem Content="100%"/>
+								<RibbonGalleryItem Content="125%"/>
+								<RibbonGalleryItem Content="150%"/>
+								<RibbonGalleryItem Content="200%"/>
+							</RibbonGalleryCategory>
+						</RibbonGallery>
+					</RibbonComboBox>
 				</RibbonGroup>
 				<RibbonGroup Header="Devices"></RibbonGroup>
 			</RibbonTab>
@@ -100,7 +113,7 @@
 
 				<GridSplitter Grid.Column="1" Width="7" VerticalAlignment="Stretch" HorizontalAlignment="Center" ShowsPreview="False"></GridSplitter>
 
-				<Grid x:Name="CanvasViewport" Grid.Column="2" ClipToBounds="True" Background="Gray">
+				<ScrollViewer x:Name="CanvasViewport" Grid.Column="2" ClipToBounds="True" Background="Gray" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
 					<Canvas x:Name="CanvasContainer" Width="320" Height="220" Margin="0,0,0,0" Background="White">
 						<Canvas x:Name="MainCanvas" Canvas.Left="10" Canvas.Bottom="10"></Canvas>
 						<Grid x:Name="Axes" Canvas.Left="10" Canvas.Bottom="10">
@@ -110,7 +123,7 @@
 							<Line x:Name="AxisY" X1="0" Y1="50" X2="50" Y2="50" Stroke="Blue" VerticalAlignment="Bottom" HorizontalAlignment="Left"/>
 						</Grid>
 					</Canvas>
-				</Grid>
+				</ScrollViewer>
 				
 				
 

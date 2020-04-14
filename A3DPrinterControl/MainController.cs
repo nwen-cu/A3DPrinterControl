@@ -16,7 +16,10 @@ namespace A3DPrinterControl
 
 		public static void Compile()
 		{
-			
+			foreach(ICADShape shape in CADCanvas.CADShapes)
+			{
+				//Infill
+			}
 		}
 
 		public static void Run()

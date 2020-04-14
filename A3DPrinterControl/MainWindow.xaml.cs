@@ -30,8 +30,8 @@ namespace A3DPrinterControl
 			InitializeComponent();
 			CommandOptionContainer = FindName("CommandOptionPanel") as Grid;
 			PyScriptManager.InitializeScriptEngine();
-			CanvasWidthBox.Text = 200.ToString();
-			CanvasHeightBox.Text = 200.ToString();
+			CanvasWidthBox.Text = 300.ToString();
+			CanvasHeightBox.Text = 300.ToString();
 		}
 
 		public void ShapeHighlight(object sender, MouseEventArgs e)
@@ -94,6 +94,14 @@ namespace A3DPrinterControl
 		private void Polygon_MouseDown(object sender, MouseButtonEventArgs e)
 		{
 			MessageBox.Show((sender as Polygon).Points.ToString());
+		}
+
+		private void RibbonGallery_SelectionChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+		{
+			if (double.TryParse((sender as RibbonGallery).SelectedValue.ToString().Replace("%", ""), out double result))
+			{
+				CADCanvas.CanvasZoom = result / 100;
+			}
 		}
 	}
 }

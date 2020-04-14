@@ -23,6 +23,10 @@ namespace A3DPrinterControl
 		public List<AuxiliaryLine> AuxiliaryLines { get; }
 		public IActionCommand Command { get; }
 
+		public void AddAuxiliaryLine(AuxiliaryLine line);
+		public void RemoveAuxiliaryLine(AuxiliaryLine line);
+		public void ClearAuxiliaryLine(AuxiliaryLine line);
+
 		public void OnSelect();
 		public void OnDeselect();
 		
