@@ -34,7 +34,7 @@ namespace A3DPrinterControl
 			throw new NotImplementedException();
 		}
 
-		public void ClearAuxiliaryLine(AuxiliaryLine line)
+		public void ClearAuxiliaryLine()
 		{
 			throw new NotImplementedException();
 		}

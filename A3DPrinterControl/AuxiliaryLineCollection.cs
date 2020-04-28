@@ -19,11 +19,13 @@ namespace A3DPrinterControl
 		public void Add(AuxiliaryLine item)
 		{
 			list.Add(item);
+			Children.Add(item.LineControl);
 		}
 
 		public void Clear()
 		{
 			list.Clear();
+			Children.Clear();
 		}
 
 		public bool Contains(AuxiliaryLine item)
@@ -49,15 +51,18 @@ namespace A3DPrinterControl
 		public void Insert(int index, AuxiliaryLine item)
 		{
 			list.Insert(index, item);
+			Children.Insert(index, item.LineControl);
 		}
 
 		public bool Remove(AuxiliaryLine item)
 		{
+			Children.Remove(item.LineControl);
 			return list.Remove(item);
 		}
 
 		public void RemoveAt(int index)
 		{
+			Children.RemoveAt(index);
 			list.RemoveAt(index);
 		}
 

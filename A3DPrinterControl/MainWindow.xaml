@@ -28,7 +28,7 @@
 			<RibbonTab Header="Home">
 				<RibbonGroup Header="Execution">
 					<RibbonButton  Label="Connect" IsEnabled="False"/>
-					<RibbonButton  Label="Compile"/>
+					<RibbonButton  Label="Compile" Click="CompileButton_Click"/>
 					<RibbonButton  Label="Run" IsEnabled="False"/>
 					<RibbonButton  Label="Stop" IsEnabled="False"/>
 				</RibbonGroup>
@@ -51,6 +51,9 @@
 					</RibbonComboBox>
 				</RibbonGroup>
 				<RibbonGroup Header="Devices"></RibbonGroup>
+				<RibbonGroup Header="Test">
+					<RibbonButton Label="Test" Click="TestButton_Click"></RibbonButton>
+				</RibbonGroup>
 			</RibbonTab>
 
 			<RibbonTab Header="Recipe">

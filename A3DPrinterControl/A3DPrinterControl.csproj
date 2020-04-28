@@ -19,6 +19,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Infill.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="test.py">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

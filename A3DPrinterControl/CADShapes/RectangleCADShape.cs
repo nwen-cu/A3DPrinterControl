@@ -147,17 +147,20 @@ namespace A3DPrinterControl
 
 		public void AddAuxiliaryLine(AuxiliaryLine line)
 		{
-			throw new NotImplementedException();
+			AuxiliaryLines.Add(line);
+			CADCanvas.MainCanvas.Children.Add(line.LineControl);
 		}
 
 		public void RemoveAuxiliaryLine(AuxiliaryLine line)
 		{
-			throw new NotImplementedException();
+			AuxiliaryLines.Remove(line);
+			CADCanvas.MainCanvas.Children.Remove(line.LineControl);
 		}
 
-		public void ClearAuxiliaryLine(AuxiliaryLine line)
+		public void ClearAuxiliaryLine()
 		{
-			throw new NotImplementedException();
+			AuxiliaryLines.ForEach(line => CADCanvas.MainCanvas.Children.Remove(line.LineControl));
+			AuxiliaryLines.Clear();
 		}
 	}
 }

@@ -45,7 +45,16 @@ namespace A3DPrinterControl
 			{
 				Container.Height = value + BorderWidth * 2;
 				BoundingBox.Height = value;
+				double oldCanvasHeight = MainCanvas.Height;
 				MainCanvas.Height = value;
+				foreach(var shape in MainCanvas.Children)
+				{
+					if(shape is Line line)
+					{
+						line.Y1 += value - oldCanvasHeight;
+						line.Y2 += value - oldCanvasHeight;
+					}
+				}
 			}
 		}
 		public static double CanvasZoom

@@ -16,10 +16,7 @@ namespace A3DPrinterControl
 
 		public static void Compile()
 		{
-			foreach(ICADShape shape in CADCanvas.CADShapes)
-			{
-				//Infill
-			}
+			SlicingController.GenerateInfill();
 		}
 
 		public static void Run()

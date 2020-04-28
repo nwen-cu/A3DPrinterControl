@@ -10,7 +10,6 @@ namespace A3DPrinterControl
 	{
 		public static Dictionary<string, PyScope> ScriptScopes = new Dictionary<string, PyScope>();
 
-
 		public static void InitializeScriptEngine()
 		{
 			Python.Included.Installer.SetupPython().Wait();

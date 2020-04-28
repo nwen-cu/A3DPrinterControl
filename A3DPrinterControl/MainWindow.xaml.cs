@@ -30,6 +30,7 @@ namespace A3DPrinterControl
 			InitializeComponent();
 			CommandOptionContainer = FindName("CommandOptionPanel") as Grid;
 			PyScriptManager.InitializeScriptEngine();
+			PyScriptManager.LoadScript("Infill", "Infill.py");
 			CanvasWidthBox.Text = 300.ToString();
 			CanvasHeightBox.Text = 300.ToString();
 		}
@@ -53,6 +54,16 @@ namespace A3DPrinterControl
 		{
 			//((sender as Canvas).ToolTip as ToolTip).StaysOpen = true;
 			
+		}
+
+		private void CompileButton_Click(object sender, RoutedEventArgs e)
+		{
+			MainController.Compile();
+		}
+
+		private void TestButton_Click(object sender, RoutedEventArgs e)
+		{
+			MessageBox.Show(CADCanvas.CADShapes.Sum(shape => shape.AuxiliaryLines.Count).ToString());
 		}
 
 		private void PrimitiveRectangle_Click(object sender, RoutedEventArgs e)
