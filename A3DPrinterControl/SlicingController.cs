@@ -17,6 +17,7 @@ namespace A3DPrinterControl
 			PyObject infills = PyScriptManager.ScriptScopes["Infill"].Eval("OnGenerateInfill()");
 			foreach (var shape in CADCanvas.CADShapes)
 			{
+				shape.ClearAuxiliaryLine();
 				PyObject infill = infills[CADCanvas.CADShapes.IndexOf(shape)];
 				foreach (PyObject line in infill)
 				{
