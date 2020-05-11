@@ -77,7 +77,7 @@ namespace A3DPrinterControl
 
 
 		public static float ZoomRatio = 1;
-		public static System.Windows.Media.ScaleTransform ZoomTransform;
+		public static ScaleTransform ZoomTransform;
 
 		static CADCanvas()
 		{
@@ -106,13 +106,11 @@ namespace A3DPrinterControl
 			if (shape == null) return;
 			CADShapes.Add(shape);
 			MainCanvas.Children.Add(shape.ShapeControl);
-			MainCanvas.Children.Add(shape.AuxiliaryLineContainer);
 		}
 
 		public static void RemoveShape(ICADShape shape)
 		{
 			if (shape == null) return;
-			MainCanvas.Children.Remove(shape.AuxiliaryLineContainer);
 			MainCanvas.Children.Remove(shape.ShapeControl);
 			CADShapes.Remove(shape);
 		}

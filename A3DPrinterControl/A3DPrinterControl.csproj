@@ -19,12 +19,42 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="CADShapes\EllipseArc\EllipseArcShapeCommandOptionView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="CADShapes\Polygon\PolygonShapeCommandOptionView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Icons.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Icons.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Icons.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Icons.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="Infill.py">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="test.py">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="CADShapes\EllipseArc\EllipseArcShapeCommandOptionView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="CADShapes\Polygon\PolygonShapeCommandOptionView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
 
 </Project>

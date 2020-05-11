@@ -43,7 +43,7 @@ namespace A3DPrinterControl
 			}
 			set
 			{
-				endpointY = value;
+				startpointY = value;
 				LineControl.Y1 = CADCanvas.MainCanvas.Height - value;
 			}
 		}

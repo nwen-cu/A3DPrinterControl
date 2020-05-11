@@ -66,9 +66,27 @@ namespace A3DPrinterControl
 			MessageBox.Show(CADCanvas.CADShapes.Sum(shape => shape.AuxiliaryLines.Count).ToString());
 		}
 
+		private void PrimitiveLine_Click(object sender, RoutedEventArgs e)
+		{
+			LineShapeCommand cmd = new LineShapeCommand();
+			Recipe.AddCommand(cmd);
+		}
+
 		private void PrimitiveRectangle_Click(object sender, RoutedEventArgs e)
 		{
 			RectangleShapeCommand cmd = new RectangleShapeCommand();
+			Recipe.AddCommand(cmd);
+		}
+
+		private void PrimitivePolygon_Click(object sender, RoutedEventArgs e)
+		{
+			PolygonShapeCommand cmd = new PolygonShapeCommand();
+			Recipe.AddCommand(cmd);
+		}
+
+		private void PrimitiveEllipseArc_Click(object sender, RoutedEventArgs e)
+		{
+			EllipseArcShapeCommand cmd = new EllipseArcShapeCommand();
 			Recipe.AddCommand(cmd);
 		}
 

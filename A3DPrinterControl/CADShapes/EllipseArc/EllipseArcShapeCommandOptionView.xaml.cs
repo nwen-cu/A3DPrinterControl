@@ -11,14 +11,22 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace A3DPrinterControl.ActionCommandOptionViews
+namespace A3DPrinterControl
 {
 	/// <summary>
 	/// LineShapeCommandOptionView.xaml 的交互逻辑
 	/// </summary>
-	public partial class LineShapeCommandOptionView : UserControl
+	public partial class EllipseArcShapeCommandOptionView : UserControl
 	{
-		public LineShapeCommandOptionView()
+		private static EllipseArcShapeCommandOptionView Instance = new EllipseArcShapeCommandOptionView();
+
+		public static EllipseArcShapeCommandOptionView Show(EllipseArcShapeCommand cmd)
+		{
+			Instance.DataContext = cmd;
+			return Instance;
+		}
+
+		public EllipseArcShapeCommandOptionView()
 		{
 			InitializeComponent();
 		}

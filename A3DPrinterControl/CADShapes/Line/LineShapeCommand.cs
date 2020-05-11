@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
 using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
 
 namespace A3DPrinterControl
 {
-	public class RectangleShapeCommand : IShapeCommand
+	public class LineShapeCommand : IBindable, IShapeCommand
 	{
-		private string _descriptionName = "Rectangle";
+		private string _descriptionName = "Line";
 		public string DescriptionName
 		{
 			get
@@ -21,55 +24,28 @@ namespace A3DPrinterControl
 				OnPropertyChanged("DescriptionName");
 			}
 		}
-
 		public ICADShape Shape { get; }
 
-		public UserControl OptionView => RectangleShapeCommandOptionView.Show(this);
-
-		public IActionCommand PreviousCommand 
-		{
-			get
-			{
-				int index = Recipe.CommandList.IndexOf(this);
-				if (index < 1) return null;
-				return Recipe.CommandList[index - 1];
-			}
-		}
-
-		public IActionCommand NextCommand
-		{
-			get
-			{
-				int index = Recipe.CommandList.IndexOf(this);
-				if (index == -1 || index + 1 == Recipe.CommandList.Count) return null;
-				return Recipe.CommandList[index + 1];
-			}
-		}
+		public UserControl OptionView { get => LineShapeCommandOptionView.Show(this); }
 
 		public IActionCommand ParentCommand => throw new NotImplementedException();
 
-		public List<IActionCommand> ChildrenCommands { get; } = null;
+		public List<IActionCommand> ChildrenCommands => null;
 
 		public ListViewItem RecipeViewItem { get; }
 
-		public RectangleShapeCommand()
+		public LineShapeCommand()
 		{
-			Shape = new RectangleCADShape(this);
+			Shape = new LineCADShape(this);
 			RecipeViewItem = new ListViewItem();
 			RecipeViewItem.Tag = this;
 			RecipeViewItem.Content = new StackPanel() { Orientation = Orientation.Horizontal };
-			(RecipeViewItem.Content as StackPanel).Children.Add(new Grid() { Width = 16, Height = 16, Background = System.Windows.Media.Brushes.Blue });
+			(RecipeViewItem.Content as StackPanel).Children.Add(new Image() { Width = 16, Height = 16, Source = ImageResources.Load("Icons", "LineShape")});
 			TextBlock text = new TextBlock();
 			text.SetBinding(TextBlock.TextProperty, "DescriptionName");
 			text.DataContext = this;
 			(RecipeViewItem.Content as StackPanel).Children.Add(text);
 			RecipeViewItem.Selected += RecipeViewItem_Selected;
-		}
-
-		public event PropertyChangedEventHandler PropertyChanged;
-		private void OnPropertyChanged(string info)
-		{
-			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(info));
 		}
 
 		private void RecipeViewItem_Selected(object sender, System.Windows.RoutedEventArgs e)
@@ -89,6 +65,11 @@ namespace A3DPrinterControl
 		public void OnCompile()
 		{
 			throw new NotImplementedException();
+		}
+
+		public void OnDeselect()
+		{
+			Shape.OnDeselect();
 		}
 
 		public void OnMove()
@@ -131,19 +112,14 @@ namespace A3DPrinterControl
 			throw new NotImplementedException();
 		}
 
-		public void OnStop()
-		{
-			throw new NotImplementedException();
-		}
-
 		public void OnSelect()
 		{
 			Shape.OnSelect();
 		}
 
-		public void OnDeselect()
+		public void OnStop()
 		{
-			Shape.OnDeselect();
+			throw new NotImplementedException();
 		}
 	}
 }

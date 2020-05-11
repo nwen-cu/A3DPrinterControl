@@ -61,8 +61,10 @@
 
 				</RibbonGroup>
 				<RibbonGroup Header="Primitives">
-					<RibbonButton Label="Line"/>
+					<RibbonButton Label="Line" Click="PrimitiveLine_Click"/>
 					<RibbonButton Label="Rectangle" Click="PrimitiveRectangle_Click"/>
+					<RibbonButton Label="Polygon" Click="PrimitivePolygon_Click"/>
+					<RibbonButton Label="Ellipse Arc" Click="PrimitiveEllipseArc_Click"/>
 				</RibbonGroup>
 				<RibbonGroup Header="Flow Control">
 

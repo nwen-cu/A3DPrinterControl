@@ -13,8 +13,24 @@ namespace A3DPrinterControl
 		public ListViewItem RecipeViewItem { get; }
 		public UserControl OptionView { get; }
 
-		public IActionCommand PreviousCommand { get; }
-		public IActionCommand NextCommand { get; }
+		public IActionCommand PreviousCommand 
+		{
+			get
+			{
+				int index = Recipe.CommandList.IndexOf(this);
+				if (index < 1) return null;
+				return Recipe.CommandList[index - 1];
+			}
+		}
+		public IActionCommand NextCommand
+		{
+			get
+			{
+				int index = Recipe.CommandList.IndexOf(this);
+				if (index == -1 || index + 1 == Recipe.CommandList.Count) return null;
+				return Recipe.CommandList[index + 1];
+			}
+		}
 		public IActionCommand ParentCommand { get; }
 		public List<IActionCommand> ChildrenCommands { get; }
 
