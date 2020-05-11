@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Windows.Controls;
 
 namespace A3DPrinterControl
 {
@@ -16,6 +18,12 @@ namespace A3DPrinterControl
 
 		public static void Compile()
 		{
+			TextBlock debug = MainWindow.Instance.FindName("DebugBox") as TextBlock;
+			debug.Text = "";
+			foreach (var shape in CADCanvas.CADShapes)
+			{
+				debug.Text += string.Join(", ", shape.Vertices.Select(v => $"({v.X:F2}, {v.Y:F2})")) + "\n";
+			}
 			SlicingController.GenerateInfill();
 		}
 
