@@ -1,28 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using System.Windows.Controls;
 
 namespace A3DPrinterControl
 {
+	[DataContract(IsReference = true), KnownType(typeof(EllipseArcCADShape))]
 	public class EllipseArcShapeCommand : IBindable, IShapeCommand
 	{
+		[DataMember]
 		private string _descriptionName = "Ellipse Arc";
 
 		public EllipseArcShapeCommand()
 		{
 			Shape = new EllipseArcCADShape(this);
-			RecipeViewItem = new ListViewItem();
-			RecipeViewItem.Tag = this;
-			RecipeViewItem.Content = new StackPanel() { Orientation = Orientation.Horizontal };
-			(RecipeViewItem.Content as StackPanel).Children.Add(new Image() { Width = 16, Height = 16, Source = ImageResources.Load("Icons", "EllipseArcShape") });
-			TextBlock text = new TextBlock();
-			text.SetBinding(TextBlock.TextProperty, "DescriptionName");
-			text.DataContext = this;
-			(RecipeViewItem.Content as StackPanel).Children.Add(text);
-			RecipeViewItem.Selected += RecipeViewItem_Selected;
+			RecipeViewItem = Recipe.CreateRecipeViewItem(this, "EllipseArcShape");
 		}
 
-		public ICADShape Shape { get; }
+		[OnDeserializing]
+		private void OnDeserializing(StreamingContext c)
+		{
+			RecipeViewItem = Recipe.CreateRecipeViewItem(this, "PolygonShape");
+		}
+
+		[DataMember]
+		public ICADShape Shape { get; private set; }
 
 		public string DescriptionName
 		{
@@ -37,13 +39,15 @@ namespace A3DPrinterControl
 			}
 		}
 
-		public ListViewItem RecipeViewItem { get; }
+		public ListViewItem RecipeViewItem { get; private set; }
 
 		public UserControl OptionView => EllipseArcShapeCommandOptionView.Show(this);
 
-		public IActionCommand ParentCommand => throw new NotImplementedException();
+		[DataMember]
+		public IActionCommand ParentCommand { get; private set; } = null;
 
-		public List<IActionCommand> ChildrenCommands => null;
+		[DataMember]
+		public List<IActionCommand> ChildrenCommands { get; private set; } = null;
 
 		public void OnCompile()
 		{
@@ -57,6 +61,7 @@ namespace A3DPrinterControl
 
 		public void OnRemove()
 		{
+			CADCanvas.RemoveShape(Shape);
 			CADCanvas.MainCanvas.SizeChanged -= (Shape as EllipseArcCADShape).UpdateControl;
 		}
 
@@ -100,15 +105,6 @@ namespace A3DPrinterControl
 
 		public void OnRecipeFinish()
 		{
-		}
-
-		private void RecipeViewItem_Selected(object sender, System.Windows.RoutedEventArgs e)
-		{
-			Recipe.SelectedCommand?.OnDeselect();
-			Recipe.SelectedCommand = this;
-			MainWindow.Instance.CommandOptionPanel.Children.Clear();
-			MainWindow.Instance.CommandOptionPanel.Children.Add(OptionView);
-			OnSelect();
 		}
 	}
 }

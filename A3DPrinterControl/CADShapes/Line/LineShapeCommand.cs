@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -9,9 +10,24 @@ using System.Windows.Shapes;
 
 namespace A3DPrinterControl
 {
+	[DataContract(IsReference = true), KnownType(typeof(LineCADShape))]
 	public class LineShapeCommand : IBindable, IShapeCommand
 	{
+		[DataMember]
 		private string _descriptionName = "Line";
+		public LineShapeCommand()
+		{
+			Shape = new LineCADShape(this);
+			RecipeViewItem = Recipe.CreateRecipeViewItem(this, "LineShape");
+		}
+
+		[OnDeserializing]
+		private void OnDeserializing(StreamingContext c)
+		{
+			RecipeViewItem = Recipe.CreateRecipeViewItem(this, "LineShape");
+		}
+
+
 		public string DescriptionName
 		{
 			get
@@ -24,39 +40,19 @@ namespace A3DPrinterControl
 				OnPropertyChanged("DescriptionName");
 			}
 		}
-		public ICADShape Shape { get; }
+
+		[DataMember]
+		public ICADShape Shape { get; private set; }
 
 		public UserControl OptionView { get => LineShapeCommandOptionView.Show(this); }
 
-		public IActionCommand ParentCommand => throw new NotImplementedException();
+		[DataMember]
+		public IActionCommand ParentCommand { get; private set; } = null;
 
-		public List<IActionCommand> ChildrenCommands => null;
+		[DataMember]
+		public List<IActionCommand> ChildrenCommands { get; private set; } = null;
 
-		public ListViewItem RecipeViewItem { get; }
-
-		public LineShapeCommand()
-		{
-			Shape = new LineCADShape(this);
-			RecipeViewItem = new ListViewItem();
-			RecipeViewItem.Tag = this;
-			RecipeViewItem.Content = new StackPanel() { Orientation = Orientation.Horizontal };
-			(RecipeViewItem.Content as StackPanel).Children.Add(new Image() { Width = 16, Height = 16, Source = ImageResources.Load("Icons", "LineShape")});
-			TextBlock text = new TextBlock();
-			text.SetBinding(TextBlock.TextProperty, "DescriptionName");
-			text.DataContext = this;
-			(RecipeViewItem.Content as StackPanel).Children.Add(text);
-			RecipeViewItem.Selected += RecipeViewItem_Selected;
-		}
-
-		private void RecipeViewItem_Selected(object sender, System.Windows.RoutedEventArgs e)
-		{
-			Recipe.SelectedCommand?.OnDeselect();
-			Recipe.SelectedCommand = this;
-			MainWindow.Instance.CommandOptionPanel.Children.Clear();
-			MainWindow.Instance.CommandOptionPanel.Children.Add(OptionView);
-			OnSelect();
-		}
-
+		public ListViewItem RecipeViewItem { get; private set; }
 		public void OnAdd()
 		{
 			CADCanvas.AddShape(Shape);
@@ -64,7 +60,7 @@ namespace A3DPrinterControl
 
 		public void OnCompile()
 		{
-			throw new NotImplementedException();
+			
 		}
 
 		public void OnDeselect()
@@ -74,42 +70,42 @@ namespace A3DPrinterControl
 
 		public void OnMove()
 		{
-			throw new NotImplementedException();
+			
 		}
 
 		public void OnPause()
 		{
-			throw new NotImplementedException();
+			
 		}
 
 		public void OnRecipeFinish()
 		{
-			throw new NotImplementedException();
+			
 		}
 
 		public void OnRecipeStart()
 		{
-			throw new NotImplementedException();
+			
 		}
 
 		public void OnRecipeStop()
 		{
-			throw new NotImplementedException();
+			
 		}
 
 		public void OnRemove()
 		{
-			throw new NotImplementedException();
+			CADCanvas.RemoveShape(Shape);
 		}
 
 		public void OnReset()
 		{
-			throw new NotImplementedException();
+			
 		}
 
 		public void OnRun()
 		{
-			throw new NotImplementedException();
+			
 		}
 
 		public void OnSelect()
@@ -119,7 +115,7 @@ namespace A3DPrinterControl
 
 		public void OnStop()
 		{
-			throw new NotImplementedException();
+			
 		}
 	}
 }

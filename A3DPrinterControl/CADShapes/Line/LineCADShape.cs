@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Net;
 using System.Numerics;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -11,6 +12,7 @@ using System.Windows.Shapes;
 
 namespace A3DPrinterControl
 {
+	[DataContract(IsReference = true), KnownType(typeof(LineShapeCommand))]
 	public class LineCADShape : IBindable, ICADShape
 	{
 		public LineCADShape(LineShapeCommand cmd)
@@ -23,6 +25,20 @@ namespace A3DPrinterControl
 			Panel.SetZIndex(ShapeControl, 10);
 		}
 
+		[OnDeserializing]
+		private void OnDeserializing(StreamingContext c)
+		{
+			ShapeControl = new Line()
+			{
+				Stroke = Brushes.Black,
+				StrokeThickness = 2,
+				RenderTransformOrigin = new Point(0, 1),
+				RenderTransform = new RotateTransform(0)
+			};
+			AuxiliaryLines = new List<AuxiliaryLine>();
+		}
+
+		[DataMember]
 		public double PositionX
 		{
 			get => (ShapeControl as Line).X1;
@@ -36,6 +52,7 @@ namespace A3DPrinterControl
 		}
 
 		private double positionY;
+		[DataMember]
 		public double PositionY
 		{
 			get => positionY;
@@ -49,6 +66,7 @@ namespace A3DPrinterControl
 			}
 		}
 
+		[DataMember]
 		public double EndpointX
 		{
 			get => (ShapeControl as Line).X2;
@@ -62,6 +80,7 @@ namespace A3DPrinterControl
 		}
 
 		private double endpointY;
+		[DataMember]
 		public double EndpointY
 		{
 			get => endpointY;
@@ -106,7 +125,7 @@ namespace A3DPrinterControl
 		}
 
 
-		public Shape ShapeControl { get; } = new Line()
+		public Shape ShapeControl { get; private set; } = new Line()
 		{
 			Stroke = Brushes.Black,
 			StrokeThickness = 2,
@@ -114,9 +133,10 @@ namespace A3DPrinterControl
 			RenderTransform = new RotateTransform(0)
 		};
 
-		public List<AuxiliaryLine> AuxiliaryLines { get; } = new List<AuxiliaryLine>();
+		public List<AuxiliaryLine> AuxiliaryLines { get; private set; } = new List<AuxiliaryLine>();
 
-		public IActionCommand Command { get; }
+		[DataMember]
+		public IActionCommand Command { get; private set; }
 
 		public List<Point> Vertices
 		{

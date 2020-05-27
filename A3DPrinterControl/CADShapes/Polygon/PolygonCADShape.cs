@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Windows;
 using System.Windows.Media;
@@ -9,15 +10,29 @@ using System.Windows.Shapes;
 
 namespace A3DPrinterControl
 {
+	[DataContract(IsReference = true), KnownType(typeof(PolygonShapeCommand))]
 	public class PolygonCADShape : IBindable, ICADShape
 	{
-		public PolygonCADShape(IActionCommand command)
+		public PolygonCADShape(PolygonShapeCommand command)
 		{
 			Command = command;
 			UpdateControl();
 		}
 
+		[OnDeserializing]
+		private void OnDeserializing(StreamingContext c)
+		{
+			ShapeControl = new Polygon()
+			{
+				Stroke = Brushes.Black,
+				StrokeThickness = 2,
+				StrokeLineJoin = PenLineJoin.Bevel
+			};
+			AuxiliaryLines = new List<AuxiliaryLine>();
+		}
+
 		private double _positionX = 0;
+		[DataMember]
 		public double PositionX 
 		{
 			get
@@ -28,11 +43,12 @@ namespace A3DPrinterControl
 			{
 				_positionX = value;
 				UpdateControl();
-				OnPropertyChanged("PositionY");
+				OnPropertyChanged("PositionX");
 			}
 		}
 
 		private double _positionY = 0;
+		[DataMember]
 		public double PositionY
 		{
 			get
@@ -47,7 +63,8 @@ namespace A3DPrinterControl
 			}
 		}
 
-		public ObservableCollection<ObservablePoint> Points { get; } = new ObservableCollection<ObservablePoint>()
+		[DataMember]
+		public ObservableCollection<ObservablePoint> Points { get; private set; } = new ObservableCollection<ObservablePoint>()
 		{
 			new ObservablePoint(0, 0),
 			new ObservablePoint(40, 20),
@@ -66,7 +83,7 @@ namespace A3DPrinterControl
 			}
 		}
 
-		public Shape ShapeControl { get; } = new Polygon()
+		public Shape ShapeControl { get; private set; } = new Polygon()
 		{
 			Stroke = Brushes.Black,
 			StrokeThickness = 2,
@@ -88,8 +105,9 @@ namespace A3DPrinterControl
 			}
 		}
 
-		public List<AuxiliaryLine> AuxiliaryLines { get; } = new List<AuxiliaryLine>();
+		public List<AuxiliaryLine> AuxiliaryLines { get; private set; } = new List<AuxiliaryLine>();
 
-		public IActionCommand Command { get; }
+		[DataMember]
+		public IActionCommand Command { get; private set; }
 	}
 }

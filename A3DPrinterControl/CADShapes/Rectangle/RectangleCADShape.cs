@@ -7,9 +7,12 @@ using System.Windows.Controls;
 using System.Windows.Shapes;
 using System.Windows.Media;
 using System.Windows;
+using System.Runtime.Serialization;
 
 namespace A3DPrinterControl
 {
+	[DataContract(IsReference = true)]
+	[KnownType(typeof(RectangleShapeCommand))]
 	class RectangleCADShape : IBindable, ICADShape
 	{
 		public RectangleCADShape(RectangleShapeCommand cmd)
@@ -20,6 +23,22 @@ namespace A3DPrinterControl
 			Panel.SetZIndex(ShapeControl, 10);
 		}
 
+		[OnDeserializing]
+		private void OnDeserializing(StreamingContext c)
+		{ 
+			ShapeControl= new Rectangle()
+			{
+				Stroke = Brushes.Black,
+				StrokeThickness = 2,
+				Width = 50,
+				Height = 50,
+				RenderTransformOrigin = new Point(0, 1),
+				RenderTransform = new RotateTransform(0)
+			};
+			AuxiliaryLines = new List<AuxiliaryLine>();
+		}
+
+		[DataMember]
 		public double PositionX
 		{
 			get
@@ -33,6 +52,8 @@ namespace A3DPrinterControl
 				OnPropertyChanged("PositionX");
 			}
 		}
+
+		[DataMember]
 		public double PositionY
 		{
 			get
@@ -45,6 +66,8 @@ namespace A3DPrinterControl
 				OnPropertyChanged("PositionY");
 			}
 		}
+
+		[DataMember]
 		public double Rotation 
 		{
 			get
@@ -57,6 +80,8 @@ namespace A3DPrinterControl
 				OnPropertyChanged("Rotation");
 			}
 		}
+
+		[DataMember]
 		public double ScaleX
 		{
 			get
@@ -70,6 +95,8 @@ namespace A3DPrinterControl
 				OnPropertyChanged("ScaleX");
 			}
 		}
+
+		[DataMember]
 		public double ScaleY
 		{
 			get
@@ -84,7 +111,7 @@ namespace A3DPrinterControl
 			}
 		}
 
-		public Shape ShapeControl { get; } = new Rectangle() 
+		public Shape ShapeControl { get; private set; } = new Rectangle() 
 		{ 
 			Stroke = Brushes.Black, 
 			StrokeThickness = 2, 
@@ -111,7 +138,9 @@ namespace A3DPrinterControl
 			}
 		}
 
-		public List<AuxiliaryLine> AuxiliaryLines { get; } = new List<AuxiliaryLine>();
-		public IActionCommand Command { get; }
+		public List<AuxiliaryLine> AuxiliaryLines { get; private set; } = new List<AuxiliaryLine>();
+
+		[DataMember]
+		public IActionCommand Command { get; private set; }
 	}
 }

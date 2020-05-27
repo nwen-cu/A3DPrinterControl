@@ -18,11 +18,10 @@ namespace A3DPrinterControl
 
 		public static void Compile()
 		{
-			TextBlock debug = MainWindow.Instance.FindName("DebugBox") as TextBlock;
-			debug.Text = "";
+			Debug.Log("");
 			foreach (var shape in CADCanvas.CADShapes)
 			{
-				debug.Text += string.Join(", ", shape.Vertices.Select(v => $"({v.X:F2}, {v.Y:F2})")) + "\n";
+				Debug.Log($"{shape.Command.DescriptionName}:\n" + string.Join(",\n", shape.Vertices.Select(v => $"({v.X:F2}, {v.Y:F2})")) + "\n");
 			}
 			SlicingController.GenerateInfill();
 		}

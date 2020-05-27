@@ -81,5 +81,9 @@ namespace A3DPrinterControl
 			ParentShape = parent;
 		}
 
+		~AuxiliaryLine()
+		{ 
+			
+		}
 	}
 }

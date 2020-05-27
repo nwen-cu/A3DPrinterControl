@@ -1,6 +1,9 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -13,6 +16,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Xml.Serialization;
 
 namespace A3DPrinterControl
 {
@@ -63,7 +67,19 @@ namespace A3DPrinterControl
 
 		private void TestButton_Click(object sender, RoutedEventArgs e)
 		{
-			MessageBox.Show(CADCanvas.CADShapes.Sum(shape => shape.AuxiliaryLines.Count).ToString());
+			Debug.Log("");
+			DataContractSerializer serializer = new DataContractSerializer(typeof(ActionCommandCollection));
+			MemoryStream ms = new MemoryStream();
+			StreamReader sr = new StreamReader(ms);
+			serializer.WriteObject(ms, Recipe.CommandList);
+			ms.Seek(0, SeekOrigin.Begin);
+			Debug.Log(sr.ReadToEnd());
+			ms.Seek(0, SeekOrigin.Begin);
+			Recipe.ClearCommand();
+			MessageBox.Show("!");
+			ActionCommandCollection acc = serializer.ReadObject(ms) as ActionCommandCollection;
+			acc.ForEach(cmd => Recipe.AddCommand(cmd));
+			sr.Close();
 		}
 
 		private void PrimitiveLine_Click(object sender, RoutedEventArgs e)
@@ -131,6 +147,34 @@ namespace A3DPrinterControl
 			{
 				CADCanvas.CanvasZoom = result / 100;
 			}
+		}
+
+		private void RibbonMenuNew_Click(object sender, RoutedEventArgs e)
+		{
+
+		}
+
+		private void RibbonMenuLoad_Click(object sender, RoutedEventArgs e)
+		{
+			DataContractSerializer serializer = new DataContractSerializer(typeof(ActionCommandCollection));
+			OpenFileDialog fd = new OpenFileDialog() { Filter="Recipe Files(*.rcp)|*.rcp" };
+			fd.ShowDialog();
+			if (string.IsNullOrEmpty(fd.FileName)) return;
+			FileStream fs = new FileStream(fd.FileName, FileMode.Open);
+			ActionCommandCollection rcp = serializer.ReadObject(fs) as ActionCommandCollection;
+			fs.Close();
+			rcp.ForEach(cmd => Recipe.AddCommand(cmd));
+		}
+
+		private void RibbonMenuSave_Click(object sender, RoutedEventArgs e)
+		{
+			DataContractSerializer serializer = new DataContractSerializer(typeof(ActionCommandCollection));
+			SaveFileDialog fd = new SaveFileDialog() { Filter = "Recipe Files(*.rcp)|*.rcp", AddExtension = true, DefaultExt = "rcp" };
+			fd.ShowDialog();
+			if (string.IsNullOrEmpty(fd.FileName)) return;
+			FileStream fs = new FileStream(fd.FileName, FileMode.Create);
+			serializer.WriteObject(fs, Recipe.CommandList);
+			fs.Close();
 		}
 	}
 }

@@ -46,7 +46,7 @@
 				<Label Content="Length" Grid.Row="6" Grid.ColumnSpan="2"/>
 				<TextBox Grid.Row="6" Grid.Column="2" Grid.ColumnSpan="2" Text="{Binding Shape.Length}"/>
 
-				<Label Content="Rotation↷" Grid.Row="7" Grid.ColumnSpan="2"/>
+				<Label Content="Rotation↺" Grid.Row="7" Grid.ColumnSpan="2"/>
 				<TextBox Grid.Row="7" Grid.Column="2" Grid.ColumnSpan="2" Text="{Binding Shape.Rotation}"/>
 			</Grid>
 			

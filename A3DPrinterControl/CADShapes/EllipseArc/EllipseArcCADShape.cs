@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Windows;
 using System.Windows.Media;
@@ -9,6 +10,7 @@ using System.Windows.Shapes;
 
 namespace A3DPrinterControl
 {
+	[DataContract(IsReference = true), KnownType(typeof(EllipseArcShapeCommand))]
 	public class EllipseArcCADShape : IBindable, ICADShape
 	{
 		public EllipseArcCADShape(EllipseArcShapeCommand cmd)
@@ -18,7 +20,21 @@ namespace A3DPrinterControl
 			UpdateControl();
 		}
 
+		[OnDeserializing]
+		private void OnDeserializing(StreamingContext c)
+		{
+			ShapeControl = new Polyline()
+			{
+				Stroke = Brushes.Black,
+				StrokeThickness = 2
+			};
+			points = new List<Point>();
+			AuxiliaryLines = new List<AuxiliaryLine>();
+		}
+
+
 		private double _centerX;
+		[DataMember]
 		public double PositionX
 		{
 			get
@@ -34,6 +50,7 @@ namespace A3DPrinterControl
 		}
 
 		private double _centerY;
+		[DataMember]
 		public double PositionY
 		{
 			get
@@ -49,6 +66,7 @@ namespace A3DPrinterControl
 		}
 
 		private double _axisX = 50;
+		[DataMember]
 		public double AxisX
 		{
 			get
@@ -65,6 +83,7 @@ namespace A3DPrinterControl
 		}
 
 		private double _axisY = 25;
+		[DataMember]
 		public double AxisY
 		{
 			get
@@ -81,6 +100,7 @@ namespace A3DPrinterControl
 		}
 
 		private double _startAngle = 0;
+		[DataMember]
 		public double StartAngle
 		{
 			get
@@ -97,6 +117,7 @@ namespace A3DPrinterControl
 		}
 
 		private double _endAngle = 360;
+		[DataMember]
 		public double EndAngle
 		{
 			get
@@ -113,6 +134,7 @@ namespace A3DPrinterControl
 		}
 
 		private double _rotation = 0;
+		[DataMember]
 		public double Rotation
 		{
 			get
@@ -129,6 +151,7 @@ namespace A3DPrinterControl
 		}
 
 		private double _sampleRate = 10;
+		[DataMember]
 		public double SampleRate
 		{
 			get
@@ -145,7 +168,7 @@ namespace A3DPrinterControl
 			}
 		}
 
-		public Shape ShapeControl { get; } = new Polyline()
+		public Shape ShapeControl { get; private set; } = new Polyline()
 		{
 			Stroke = Brushes.Black,
 			StrokeThickness = 2
@@ -172,13 +195,14 @@ namespace A3DPrinterControl
 			}
 		}
 
-		public List<AuxiliaryLine> AuxiliaryLines { get; } = new List<AuxiliaryLine>();
+		public List<AuxiliaryLine> AuxiliaryLines { get; private set; } = new List<AuxiliaryLine>();
 
-		public IActionCommand Command { get; }
+		public IActionCommand Command { get; private set; }
 
 		public void UpdateEllipse()
 		{
 			//Update axes, angles, rotation.
+			if (SampleRate == 0) return;
 			points.Clear();
 			double angle = Rotation * Math.PI / 180;
 
