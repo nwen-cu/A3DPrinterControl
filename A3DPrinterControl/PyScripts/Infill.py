@@ -1,4 +1,5 @@
-﻿def OnGenerateInfill():
+﻿def OnGeneratingInfill():
+	debuglog("In script log")
 	infills = list()
 	for shape in shapes:
 		infill = list()

@@ -41,7 +41,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Infill.py">
+    <None Update="PyScripts\Infill.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="PyScripts\Init.py">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="test.py">

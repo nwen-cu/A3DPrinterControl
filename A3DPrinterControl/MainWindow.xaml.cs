@@ -34,6 +34,7 @@ namespace A3DPrinterControl
 			InitializeComponent();
 			CommandOptionContainer = FindName("CommandOptionPanel") as Grid;
 			PyScriptManager.InitializeScriptEngine();
+			PyScriptManager.LoadModule();
 			PyScriptManager.LoadScript("Infill", "Infill.py");
 			CanvasWidthBox.Text = 300.ToString();
 			CanvasHeightBox.Text = 300.ToString();
@@ -151,14 +152,14 @@ namespace A3DPrinterControl
 
 		private void RibbonMenuNew_Click(object sender, RoutedEventArgs e)
 		{
-
+			Recipe.ClearCommand();
 		}
 
 		private void RibbonMenuLoad_Click(object sender, RoutedEventArgs e)
 		{
 			DataContractSerializer serializer = new DataContractSerializer(typeof(ActionCommandCollection));
 			OpenFileDialog fd = new OpenFileDialog() { Filter="Recipe Files(*.rcp)|*.rcp" };
-			fd.ShowDialog();
+			if (fd.ShowDialog() != true) return;
 			if (string.IsNullOrEmpty(fd.FileName)) return;
 			FileStream fs = new FileStream(fd.FileName, FileMode.Open);
 			ActionCommandCollection rcp = serializer.ReadObject(fs) as ActionCommandCollection;
@@ -170,7 +171,7 @@ namespace A3DPrinterControl
 		{
 			DataContractSerializer serializer = new DataContractSerializer(typeof(ActionCommandCollection));
 			SaveFileDialog fd = new SaveFileDialog() { Filter = "Recipe Files(*.rcp)|*.rcp", AddExtension = true, DefaultExt = "rcp" };
-			fd.ShowDialog();
+			if (fd.ShowDialog() != true) return;
 			if (string.IsNullOrEmpty(fd.FileName)) return;
 			FileStream fs = new FileStream(fd.FileName, FileMode.Create);
 			serializer.WriteObject(fs, Recipe.CommandList);

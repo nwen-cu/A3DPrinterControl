@@ -19,6 +19,7 @@ namespace A3DPrinterControl
 		public static void Compile()
 		{
 			Debug.Log("");
+			Debug.Log("Vertices:");
 			foreach (var shape in CADCanvas.CADShapes)
 			{
 				Debug.Log($"{shape.Command.DescriptionName}:\n" + string.Join(",\n", shape.Vertices.Select(v => $"({v.X:F2}, {v.Y:F2})")) + "\n");

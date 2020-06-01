@@ -149,8 +149,13 @@
 					<GridSplitter Grid.Row="1" Height="5" VerticalAlignment="Center" HorizontalAlignment="Stretch" ShowsPreview="False"/>
 					<DockPanel Grid.Row="2" MinWidth="100">
 						<TabControl DockPanel.Dock="Top">
-							<TabItem Header="Options">
+							<TabItem Header="Command">
 								<Grid x:Name="CommandOptionPanel">
+
+								</Grid>
+							</TabItem>
+							<TabItem Header="Marking">
+								<Grid x:Name="MarkingOptionPanel">
 
 								</Grid>
 							</TabItem>

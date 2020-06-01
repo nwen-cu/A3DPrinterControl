@@ -15,7 +15,7 @@ namespace A3DPrinterControl
 			List<List<List<double>>> shapes = CADCanvas.CADShapes.Select(shape => shape.Vertices.Select(vertex => new List<double>() { vertex.X, vertex.Y }).ToList()).ToList();
 			PyScriptManager.ScriptScopes["Infill"].Set("shapes", shapes); 
 			PyScriptManager.ScriptScopes["Infill"].Set("shape_objects", CADCanvas.CADShapes.AsReadOnly());
-			PyObject infills = PyScriptManager.ScriptScopes["Infill"].Eval("OnGenerateInfill()");
+			PyObject infills = PyScriptManager.ScriptScopes["Infill"].Eval("OnGeneratingInfill()");
 			Debug.Log("Infills:\n");
 			foreach (var shape in CADCanvas.CADShapes)
 			{
