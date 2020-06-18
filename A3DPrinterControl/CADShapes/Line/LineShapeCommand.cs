@@ -53,6 +53,10 @@ namespace A3DPrinterControl
 		public List<IActionCommand> ChildrenCommands { get; private set; } = null;
 
 		public ListViewItem RecipeViewItem { get; private set; }
+
+		[DataMember]
+		public MotionOption MotionOption { get; private set; } = new MotionOption();
+
 		public void OnAdd()
 		{
 			CADCanvas.AddShape(Shape);

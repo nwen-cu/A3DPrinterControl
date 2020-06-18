@@ -27,12 +27,23 @@ namespace A3DPrinterControl
 	{
 		//Static handles
 		public static MainWindow Instance;
+
+		public static TabControl OptionTabContainer;
 		public static Grid CommandOptionContainer;
+		public static TabItem MotionOptionTabpage;
+		public static Grid MotionOptionContainer;
+		public static TabItem InfillOptionTabpage;
+		public static Grid InfillOptionContainer;
 		public MainWindow()
 		{
 			Instance = this;
 			InitializeComponent();
+			OptionTabContainer = FindName("OptionTabs") as TabControl;
 			CommandOptionContainer = FindName("CommandOptionPanel") as Grid;
+			MotionOptionTabpage = FindName("MotionOptionTab") as TabItem;
+			MotionOptionContainer = FindName("MotionOptionPanel") as Grid;
+			InfillOptionTabpage = FindName("InfillOptionTab") as TabItem;
+			InfillOptionContainer = FindName("InfillOptionPanel") as Grid;
 			PyScriptManager.InitializeScriptEngine();
 			PyScriptManager.LoadModule();
 			PyScriptManager.LoadScript("Infill", "Infill.py");

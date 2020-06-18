@@ -9,7 +9,7 @@ using System.Xml.Serialization;
 namespace A3DPrinterControl
 {
 	[DataContract(IsReference = true), KnownType(typeof(RectangleCADShape))]
-	public class RectangleShapeCommand : IBindable, IShapeCommand
+	public class RectangleShapeCommand : IBindable, IShapeCommand, IInfill
 	{
 		[DataMember]
 		private string _descriptionName = "Rectangle";
@@ -50,6 +50,13 @@ namespace A3DPrinterControl
 		public List<IActionCommand> ChildrenCommands { get; private set; } = null;
 
 		public ListViewItem RecipeViewItem { get; private set; }
+
+		[DataMember]
+		public MotionOption MotionOption { get; private set; } = new MotionOption();
+
+		[DataMember]
+		public InfillOption InfillOption { get; private set; } = new InfillOption();
+
 		public void OnAdd()
 		{
 			CADCanvas.AddShape(Shape);

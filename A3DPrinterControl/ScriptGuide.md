@@ -31,8 +31,7 @@ Invoked when generating infill lines
 
 >>Shape objects  
 >>**shape_objects**=[#ShapeObj0, #ShapeObj1, ...]
-
-
+>>>
 
 >**Expected return value:** A List of lines(2x2 Tuple) for each shape(in a list)  
 >[ [ ( (0, 1), (0, 3) ), ( (1, 1), (1, 3) ), (#Line2) ], [#Shape1], [#Shape2] ]

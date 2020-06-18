@@ -4,8 +4,8 @@ using System.Text;
 
 namespace A3DPrinterControl
 {
-	public interface IShapeCommand : IActionCommand, IMotion
+	public interface IMotion
 	{
-		public ICADShape Shape { get; }
+		public MotionOption MotionOption { get; }
 	}
 }

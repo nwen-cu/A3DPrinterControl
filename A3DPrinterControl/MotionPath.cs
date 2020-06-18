@@ -4,8 +4,8 @@ using System.Text;
 
 namespace A3DPrinterControl
 {
-	public interface IShapeCommand : IActionCommand, IMotion
+	public class MotionPath
 	{
-		public ICADShape Shape { get; }
+		//TODO: Motion settings per segment
 	}
 }

@@ -1,4 +1,4 @@
 ﻿def OnLoadModule():
-	return ["numpy"]
+	return ["numpy", "shapely"]
 
 

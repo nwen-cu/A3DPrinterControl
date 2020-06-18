@@ -7,7 +7,7 @@ using System.Windows.Controls;
 namespace A3DPrinterControl 
 {
 	[DataContract(IsReference = true), KnownType(typeof(PolygonCADShape))]
-	public class PolygonShapeCommand : IBindable, IShapeCommand
+	public class PolygonShapeCommand : IBindable, IShapeCommand, IInfill
 	{
 		[DataMember]
 		public ICADShape Shape { get; private set; }
@@ -48,6 +48,12 @@ namespace A3DPrinterControl
 
 		[DataMember]
 		public List<IActionCommand> ChildrenCommands { get; private set; } = null;
+
+		[DataMember]
+		public MotionOption MotionOption { get; private set; } = new MotionOption();
+
+		[DataMember]
+		public InfillOption InfillOption { get; private set; } = new InfillOption();
 
 		public void OnAdd()
 		{

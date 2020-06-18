@@ -6,7 +6,7 @@ using System.Windows.Controls;
 namespace A3DPrinterControl
 {
 	[DataContract(IsReference = true), KnownType(typeof(EllipseArcCADShape))]
-	public class EllipseArcShapeCommand : IBindable, IShapeCommand
+	public class EllipseArcShapeCommand : IBindable, IShapeCommand, IInfill
 	{
 		[DataMember]
 		private string _descriptionName = "Ellipse Arc";
@@ -48,6 +48,12 @@ namespace A3DPrinterControl
 
 		[DataMember]
 		public List<IActionCommand> ChildrenCommands { get; private set; } = null;
+
+		[DataMember]
+		public InfillOption InfillOption { get; private set; } = new InfillOption();
+
+		[DataMember]
+		public MotionOption MotionOption { get; private set; } = new MotionOption();
 
 		public void OnCompile()
 		{

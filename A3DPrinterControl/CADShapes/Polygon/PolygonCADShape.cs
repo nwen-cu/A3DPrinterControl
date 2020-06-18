@@ -100,7 +100,7 @@ namespace A3DPrinterControl
 				{
 					vertices.Add(new Point(PositionX + point.X, PositionY + point.Y));
 				}
-
+				vertices.Add(vertices[0]);
 				return vertices;
 			}
 		}

@@ -39,6 +39,7 @@ namespace A3DPrinterControl
 			}
 			ScriptScopes.Add(name, scriptScope);
 			scriptScope.Set("debuglog", (Action<string>)Debug.Log);
+			scriptScope.Set("debugmsgbox", (Action<string>)Debug.MsgBox);
 		}
 	}
 }

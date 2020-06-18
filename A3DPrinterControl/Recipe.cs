@@ -56,6 +56,28 @@ namespace A3DPrinterControl
 			if (command == null) return;
 			MainWindow.CommandOptionContainer.Children.Clear();
 			MainWindow.CommandOptionContainer.Children.Add(command.OptionView);
+			if (command.GetType().GetInterface("IMotion") != null)
+			{
+				MainWindow.MotionOptionContainer.Children.Clear();
+				MainWindow.MotionOptionContainer.Children.Add((command as IMotion).MotionOption.OptionView);
+				MainWindow.MotionOptionTabpage.IsEnabled = true;
+			}
+			else
+			{
+				MainWindow.OptionTabContainer.SelectedIndex = 0;
+				MainWindow.MotionOptionTabpage.IsEnabled = false;
+			}
+			if (command.GetType().GetInterface("IInfill") != null)
+			{
+				MainWindow.InfillOptionContainer.Children.Clear();
+				MainWindow.InfillOptionContainer.Children.Add((command as IInfill).InfillOption.OptionView);
+				MainWindow.InfillOptionTabpage.IsEnabled = true;
+			}
+			else
+			{
+				MainWindow.OptionTabContainer.SelectedIndex = 0;
+				MainWindow.InfillOptionTabpage.IsEnabled = false;
+			}
 			if (command is IShapeCommand scommand)
 			{
 				scommand.Shape.OnSelect();
@@ -97,8 +119,7 @@ namespace A3DPrinterControl
 		{
 			SelectedCommand?.OnDeselect();
 			SelectedCommand = (sender as ListViewItem).Tag as IActionCommand;
-			MainWindow.Instance.CommandOptionPanel.Children.Clear();
-			MainWindow.Instance.CommandOptionPanel.Children.Add(SelectedCommand.OptionView);
+			CommandSelected(SelectedCommand);
 			SelectedCommand.OnSelect();
 		}
 

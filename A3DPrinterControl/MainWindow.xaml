@@ -148,14 +148,19 @@
 
 					<GridSplitter Grid.Row="1" Height="5" VerticalAlignment="Center" HorizontalAlignment="Stretch" ShowsPreview="False"/>
 					<DockPanel Grid.Row="2" MinWidth="100">
-						<TabControl DockPanel.Dock="Top">
+						<TabControl x:Name="OptionTabs" DockPanel.Dock="Top">
 							<TabItem Header="Command">
 								<Grid x:Name="CommandOptionPanel">
 
 								</Grid>
 							</TabItem>
-							<TabItem Header="Marking">
-								<Grid x:Name="MarkingOptionPanel">
+							<TabItem x:Name="MotionOptionTab" Header="Motion" IsEnabled="False">
+								<Grid x:Name="MotionOptionPanel">
+
+								</Grid>
+							</TabItem>
+							<TabItem x:Name="InfillOptionTab" Header="Infill" IsEnabled="False">
+								<Grid x:Name="InfillOptionPanel">
 
 								</Grid>
 							</TabItem>
