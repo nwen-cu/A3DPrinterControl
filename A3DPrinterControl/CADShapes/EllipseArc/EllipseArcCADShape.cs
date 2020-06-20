@@ -189,7 +189,7 @@ namespace A3DPrinterControl
 					vertices.Add(new Point(x, y));
 				}
 
-				if(EndAngle - StartAngle == 360) vertices.Add(vertices.Last());
+				if(EndAngle - StartAngle == 360) vertices.Add(vertices.First());
 
 				return vertices;
 			}

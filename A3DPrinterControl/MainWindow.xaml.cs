@@ -44,9 +44,7 @@ namespace A3DPrinterControl
 			MotionOptionContainer = FindName("MotionOptionPanel") as Grid;
 			InfillOptionTabpage = FindName("InfillOptionTab") as TabItem;
 			InfillOptionContainer = FindName("InfillOptionPanel") as Grid;
-			PyScriptManager.InitializeScriptEngine();
-			PyScriptManager.LoadModule();
-			PyScriptManager.LoadScript("Infill", "Infill.py");
+			MainController.Initialize();
 			CanvasWidthBox.Text = 300.ToString();
 			CanvasHeightBox.Text = 300.ToString();
 		}

@@ -18,6 +18,16 @@ namespace A3DPrinterControl
 			PythonEngine.Initialize();
 		}
 
+		public static void ResetTempScope()
+		{
+			if (ScriptScopes.ContainsKey("Temp"))
+			{
+				ScriptScopes["Temp"].Dispose();
+				ScriptScopes.Remove("Temp");
+			}	
+			ScriptScopes.Add("Temp", Py.CreateScope());
+		}
+
 		public static void LoadModule()
 		{
 			LoadScript("Init", "Init.py");

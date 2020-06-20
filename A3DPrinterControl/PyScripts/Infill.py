@@ -6,7 +6,6 @@ def OnGeneratingInfill():
 	infills = list()
 	for shape in shape_objects:
 		shape_points = pointlistConverter(shape.Vertices)
-		debugmsgbox(str(shape_points))
 		if shape_points[0] != shape_points[-1]:
 			infills.append([])
 			continue

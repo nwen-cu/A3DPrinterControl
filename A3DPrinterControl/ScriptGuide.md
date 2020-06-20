@@ -1,5 +1,11 @@
 ﻿# Scripting Guide
-	
+
+>**Shared debugging interface:**  
+>>Debug logger:  
+>>**debuglog("string")**    #print output string to debug textbox  
+>>**debuglog("")**    #clear debug textbox  
+>>**debugmsgbox("string")**    #show a message box  
+
 ### OnInitialized()
 Invoked after the python engine initialized.
 
@@ -20,10 +26,6 @@ Invoked when generating infill lines
 
 >**File:** \PyScripts\Infill.py  
 
->**Provided interface:**  
->>Debug logger:  
->>**debuglog("string")**    #print output string to debug textbox  
->>**debuglog("")**    #clear debug textbox  
 
 >>Shapes:
 >>Vertex list(Each n-vertice shape is represented as a list of n+1 points)  

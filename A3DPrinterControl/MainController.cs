@@ -13,7 +13,10 @@ namespace A3DPrinterControl
 
 		public static void Initialize()
 		{
-			
+			PyScriptManager.InitializeScriptEngine();
+			PyScriptManager.LoadModule();
+			PyScriptManager.ResetTempScope();
+			PyScriptManager.LoadScript("Infill", "Infill.py");
 		}
 
 		public static void Compile()

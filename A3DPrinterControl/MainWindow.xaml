@@ -92,6 +92,7 @@
 					<ColumnDefinition Width="2*"></ColumnDefinition>
 					<ColumnDefinition Width="Auto"></ColumnDefinition>
 					<ColumnDefinition Width="7*"></ColumnDefinition>
+					<ColumnDefinition Width="0.2*"></ColumnDefinition>
 					<ColumnDefinition Width="Auto"></ColumnDefinition>
 					<ColumnDefinition Width="2*"></ColumnDefinition>
 				</Grid.ColumnDefinitions>
@@ -103,7 +104,7 @@
 								
 							</ListView>
 						</TabItem>
-						<TabItem Header="Timeline">
+						<TabItem Header="Timeline" IsEnabled="False">
 							<ScrollViewer HorizontalScrollBarVisibility="Visible">
 								<StackPanel Orientation="Horizontal">
 									<StackPanel>
@@ -131,12 +132,19 @@
 						</Grid>
 					</Canvas>
 				</ScrollViewer>
-				
-				
 
-					<GridSplitter Grid.Column="3" Width="7" VerticalAlignment="Stretch" HorizontalAlignment="Center" ShowsPreview="False"></GridSplitter>
+				<Grid Grid.Column="3">
+					<Grid.RowDefinitions>
+						<RowDefinition Height="*"/>
+						<RowDefinition Height="Auto"/>
+					</Grid.RowDefinitions>
+					<ScrollBar Grid.Row="0"/>
+					<TextBox Grid.Row="1" Text="0"/>
+				</Grid>
 
-				<Grid Grid.Column="4">
+				<GridSplitter Grid.Column="4" Width="7" VerticalAlignment="Stretch" HorizontalAlignment="Center" ShowsPreview="False"></GridSplitter>
+
+				<Grid Grid.Column="5">
 					<Grid.RowDefinitions>
 						<RowDefinition/>
 						<RowDefinition Height="Auto"/>
