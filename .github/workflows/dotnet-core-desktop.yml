@@ -31,6 +31,38 @@ jobs:
     - name: Build
       run: dotnet build
     
-    # Show
-    - name: List all files
-      run: tree
+    # Bump version
+    - name: Bump tag version
+      uses: anothrNick/github-tag-action@1.22.0
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        DEFAULT_BUMP : patch
+        WITH_V: true
+    
+    # Compress archive
+    - name: Compress archive
+      run: Compress-Archive -Path .\A3DPrinterControl\bin\Debug\netcoreapp3.1\* a3dp-release.zip
+    
+    # Create Release
+    - name: Create release
+      id: create_release
+      uses: actions/create-release@v1.1.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        draft: false
+        prerelease: true
+        
+    #Upload release archive
+    - name: Upload release archive
+      id: upload-release-asset 
+      uses: actions/upload-release-asset@v1.0.2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+        asset_path: ./a3dp-release.zip
+        asset_name: a3dp-release.zip
+        asset_content_type: application/zip
