@@ -5,10 +5,9 @@ on:
     branches: [ master ]
 
 jobs:
-
   build:
-    runs-on: windows-latest  # For a list of available runner types, refer to 
-                             # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
+    runs-on: windows-latest 
+    
     steps:
     - name: Checkout
       uses: actions/checkout@v2.3.1
@@ -22,15 +21,27 @@ jobs:
     # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
     - name: Setup MSBuild.exe
       uses: microsoft/setup-msbuild@v1
-
-    # Execute all unit tests in the solution
-    - name: Execute unit tests
-      run: dotnet test
-
+      
     # Build
     - name: Build
       run: dotnet build
     
+    # Compress archive
+    - name: Compress archive
+      run: Compress-Archive -Path .\A3DPrinterControl\bin\Debug\netcoreapp3.1\* a3dp-release.zip
+    
+    # Upload release archive
+    - name: Upload release archive
+      uses: actions/upload-artifact@v2
+      with:
+        name: release-archive
+        path: .\a3dp-release.zip
+  
+  tag:
+    needs: build
+    runs-on: ubuntu-latest
+        
+    steps:
     # Bump version
     - name: Bump tag version
       uses: anothrNick/github-tag-action@1.22.0
@@ -38,11 +49,12 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         DEFAULT_BUMP : patch
         WITH_V: true
+      
+  release:
+    needs: tag
+    runs-on: windows-latest 
     
-    # Compress archive
-    - name: Compress archive
-      run: Compress-Archive -Path .\A3DPrinterControl\bin\Debug\netcoreapp3.1\* a3dp-release.zip
-    
+    steps:
     # Create Release
     - name: Create release
       id: create_release
@@ -54,6 +66,12 @@ jobs:
         release_name: Release ${{ github.ref }}
         draft: false
         prerelease: true
+ 
+    # Download release archive
+    - name: Download release archive
+      uses: actions/download-artifact@v2
+      with:
+        name: release-archive
         
     #Upload release archive
     - name: Upload release archive
@@ -66,3 +84,5 @@ jobs:
         asset_path: ./a3dp-release.zip
         asset_name: a3dp-release.zip
         asset_content_type: application/zip
+  
+
