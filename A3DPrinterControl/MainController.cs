@@ -27,9 +27,6 @@ namespace A3DPrinterControl
 			{
 				Debug.Log($"{shape.Command.DescriptionName}:\n" + string.Join(",\n", shape.Vertices.Select(v => $"({v.X:F2}, {v.Y:F2})")) + "\n");
 			}
-
-			Recipe.CommandList.ForEach(cmd => cmd.OnCompile());
-
 			SlicingController.GenerateInfill();
 		}
 

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Windows.Controls;
-using System.Windows.Media;
 
 namespace A3DPrinterControl
 {
@@ -15,12 +14,13 @@ namespace A3DPrinterControl
 		public EllipseArcShapeCommand()
 		{
 			Shape = new EllipseArcCADShape(this);
+			RecipeViewItem = Recipe.CreateRecipeViewItem(this, "EllipseArcShape");
 		}
 
 		[OnDeserializing]
 		private void OnDeserializing(StreamingContext c)
 		{
-			
+			RecipeViewItem = Recipe.CreateRecipeViewItem(this, "PolygonShape");
 		}
 
 		[DataMember]
@@ -44,10 +44,10 @@ namespace A3DPrinterControl
 		public UserControl OptionView => EllipseArcShapeCommandOptionView.Show(this);
 
 		[DataMember]
-		public IActionCommand ParentCommand { get; set; } = null;
+		public IActionCommand ParentCommand { get; private set; } = null;
 
 		[DataMember]
-		public ActionCommandCollection ChildrenCommands { get; private set; } = new ActionCommandCollection();
+		public List<IActionCommand> ChildrenCommands { get; private set; } = null;
 
 		[DataMember]
 		public InfillOption InfillOption { get; private set; } = new InfillOption();
@@ -55,8 +55,9 @@ namespace A3DPrinterControl
 		[DataMember]
 		public MotionOption MotionOption { get; private set; } = new MotionOption();
 
-		public ImageSource Icon => ImageResources.Load("Icons", "EllipseArcShape");
-
+		public void OnCompile()
+		{
+		}
 
 		public void OnAdd()
 		{
@@ -70,6 +71,10 @@ namespace A3DPrinterControl
 			CADCanvas.MainCanvas.SizeChanged -= (Shape as EllipseArcCADShape).UpdateControl;
 		}
 
+		public void OnMove()
+		{
+		}
+
 		public void OnSelect()
 		{
 			Shape.OnSelect();
@@ -78,6 +83,34 @@ namespace A3DPrinterControl
 		public void OnDeselect()
 		{
 			Shape.OnDeselect();
+		}
+
+		public void OnRun()
+		{
+		}
+
+		public void OnPause()
+		{
+		}
+
+		public void OnStop()
+		{
+		}
+
+		public void OnReset()
+		{
+		}
+
+		public void OnRecipeStart()
+		{
+		}
+
+		public void OnRecipeStop()
+		{
+		}
+
+		public void OnRecipeFinish()
+		{
 		}
 	}
 }

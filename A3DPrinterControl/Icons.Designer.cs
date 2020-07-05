@@ -63,16 +63,6 @@ namespace A3DPrinterControl {
         /// <summary>
         ///   查找 System.Byte[] 类型的本地化资源。
         /// </summary>
-        internal static byte[] AuxiliaryLines {
-            get {
-                object obj = ResourceManager.GetObject("AuxiliaryLines", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   查找 System.Byte[] 类型的本地化资源。
-        /// </summary>
         internal static byte[] EllipseArcShape {
             get {
                 object obj = ResourceManager.GetObject("EllipseArcShape", resourceCulture);

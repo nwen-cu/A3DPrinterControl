@@ -13,30 +13,27 @@ namespace A3DPrinterControl
 	[DataContract(IsReference = true), KnownType(typeof(PolygonShapeCommand))]
 	public class PolygonCADShape : IBindable, ICADShape
 	{
-		private double _positionX = 0;
-
-		private double _positionY = 0;
-
 		public PolygonCADShape(PolygonShapeCommand command)
 		{
 			Command = command;
 			UpdateControl();
 		}
 
-		private Brush _color = Brushes.Black;
-		[DataMember]
-		public Brush Color
+		[OnDeserializing]
+		private void OnDeserializing(StreamingContext c)
 		{
-			get => _color;
-			set
+			ShapeControl = new Polygon()
 			{
-				_color = value;
-				ShapeControl.Stroke = value;
-			}
+				Stroke = Brushes.Black,
+				StrokeThickness = 2,
+				StrokeLineJoin = PenLineJoin.Bevel
+			};
+			AuxiliaryLines = new List<AuxiliaryLine>();
 		}
 
+		private double _positionX = 0;
 		[DataMember]
-		public double PositionX
+		public double PositionX 
 		{
 			get
 			{
@@ -50,6 +47,7 @@ namespace A3DPrinterControl
 			}
 		}
 
+		private double _positionY = 0;
 		[DataMember]
 		public double PositionY
 		{
@@ -72,6 +70,18 @@ namespace A3DPrinterControl
 			new ObservablePoint(40, 20),
 			new ObservablePoint(20, 40)
 		};
+
+		public void UpdateControl(object sender = null, SizeChangedEventArgs e = null)
+		{
+			var polygon = ShapeControl as Polygon;
+			polygon.Points.Clear();
+			foreach (ObservablePoint p in Points)
+			{
+				double x = p.X + PositionX;
+				double y = CADCanvas.MainCanvas.Height - (p.Y + PositionY);
+				polygon.Points.Add(new Point(x, y));
+			}
+		}
 
 		public Shape ShapeControl { get; private set; } = new Polygon()
 		{
@@ -99,29 +109,5 @@ namespace A3DPrinterControl
 
 		[DataMember]
 		public IActionCommand Command { get; private set; }
-
-		public void UpdateControl(object sender = null, SizeChangedEventArgs e = null)
-		{
-			var polygon = ShapeControl as Polygon;
-			polygon.Points.Clear();
-			foreach (ObservablePoint p in Points)
-			{
-				double x = p.X + PositionX;
-				double y = CADCanvas.MainCanvas.Height - (p.Y + PositionY);
-				polygon.Points.Add(new Point(x, y));
-			}
-		}
-
-		[OnDeserializing]
-		private void OnDeserializing(StreamingContext c)
-		{
-			ShapeControl = new Polygon()
-			{
-				Stroke = Brushes.Black,
-				StrokeThickness = 2,
-				StrokeLineJoin = PenLineJoin.Bevel
-			};
-			AuxiliaryLines = new List<AuxiliaryLine>();
-		}
 	}
 }
