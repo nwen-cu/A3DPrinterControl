@@ -23,21 +23,6 @@ namespace A3DPrinterControl
 			Panel.SetZIndex(ShapeControl, 10);
 		}
 
-		[OnDeserializing]
-		private void OnDeserializing(StreamingContext c)
-		{ 
-			ShapeControl= new Rectangle()
-			{
-				Stroke = Brushes.Black,
-				StrokeThickness = 2,
-				Width = 50,
-				Height = 50,
-				RenderTransformOrigin = new Point(0, 1),
-				RenderTransform = new RotateTransform(0)
-			};
-			AuxiliaryLines = new List<AuxiliaryLine>();
-		}
-
 		[DataMember]
 		public double PositionX
 		{
@@ -68,7 +53,7 @@ namespace A3DPrinterControl
 		}
 
 		[DataMember]
-		public double Rotation 
+		public double Rotation
 		{
 			get
 			{
@@ -111,11 +96,11 @@ namespace A3DPrinterControl
 			}
 		}
 
-		public Shape ShapeControl { get; private set; } = new Rectangle() 
-		{ 
-			Stroke = Brushes.Black, 
-			StrokeThickness = 2, 
-			Width = 50, 
+		public Shape ShapeControl { get; private set; } = new Rectangle()
+		{
+			Stroke = Brushes.Black,
+			StrokeThickness = 2,
+			Width = 50,
 			Height = 50,
 			RenderTransformOrigin = new Point(0, 1),
 			RenderTransform = new RotateTransform(0)
@@ -142,5 +127,32 @@ namespace A3DPrinterControl
 
 		[DataMember]
 		public IActionCommand Command { get; private set; }
+
+		private Brush _color = Brushes.Black;
+		[DataMember]
+		public Brush Color
+		{
+			get => _color;
+			set
+			{
+				_color = value;
+				ShapeControl.Stroke = value;
+			}
+		}
+
+		[OnDeserializing]
+		private void OnDeserializing(StreamingContext c)
+		{ 
+			ShapeControl= new Rectangle()
+			{
+				Stroke = Brushes.Black,
+				StrokeThickness = 2,
+				Width = 50,
+				Height = 50,
+				RenderTransformOrigin = new Point(0, 1),
+				RenderTransform = new RotateTransform(0)
+			};
+			AuxiliaryLines = new List<AuxiliaryLine>();
+		}
 	}
 }

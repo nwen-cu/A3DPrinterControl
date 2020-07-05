@@ -20,16 +20,11 @@ namespace A3DPrinterControl
 		public List<AuxiliaryLine> AuxiliaryLines { get; }
 		public IActionCommand Command { get; }
 
-		public void AddAuxiliaryLine(AuxiliaryLine line)
-		{
-			AuxiliaryLines.Add(line);
-			CADCanvas.MainCanvas.Children.Add(line.LineControl);
-		}
+		public Brush Color { get; set; }
 
-		public void RemoveAuxiliaryLine(AuxiliaryLine line)
+		public void Highlight(bool toggle = true)
 		{
-			AuxiliaryLines.Remove(line);
-			CADCanvas.MainCanvas.Children.Remove(line.LineControl);
+			ShapeControl.Stroke = toggle ? Brushes.Blue : Color;
 		}
 
 		public void ClearAuxiliaryLine()
@@ -40,12 +35,12 @@ namespace A3DPrinterControl
 
 		public void OnDeselect()
 		{
-			ShapeControl.Stroke = Brushes.Black;
+			Highlight(false);
 		}
 
 		public void OnSelect()
 		{
-			ShapeControl.Stroke = Brushes.Blue;
+			Highlight();
 		}
 
 

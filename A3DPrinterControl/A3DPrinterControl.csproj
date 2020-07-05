@@ -20,10 +20,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="CADShapes\EllipseArc\EllipseArcShapeCommandOptionView.xaml.cs">
+    <Compile Update="Commands\CADShapes\EllipseArc\EllipseArcShapeCommandOptionView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="CADShapes\Polygon\PolygonShapeCommandOptionView.xaml.cs">
+    <Compile Update="Commands\CADShapes\Polygon\PolygonShapeCommandOptionView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Icons.Designer.cs">
@@ -53,10 +53,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="CADShapes\EllipseArc\EllipseArcShapeCommandOptionView.xaml">
+    <Page Update="Commands\CADShapes\EllipseArc\EllipseArcShapeCommandOptionView.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="CADShapes\Polygon\PolygonShapeCommandOptionView.xaml">
+    <Page Update="Commands\CADShapes\Polygon\PolygonShapeCommandOptionView.xaml">
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>

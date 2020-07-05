@@ -13,6 +13,24 @@ namespace A3DPrinterControl
 	[DataContract(IsReference = true), KnownType(typeof(EllipseArcShapeCommand))]
 	public class EllipseArcCADShape : IBindable, ICADShape
 	{
+		private double _centerX;
+
+		private double _centerY;
+
+		private double _axisX = 50;
+
+		private double _axisY = 25;
+
+		private double _startAngle = 0;
+
+		private double _endAngle = 360;
+
+		private double _rotation = 0;
+
+		private double _sampleRate = 10;
+
+		private List<Point> points = new List<Point>();
+
 		public EllipseArcCADShape(EllipseArcShapeCommand cmd)
 		{
 			Command = cmd;
@@ -20,20 +38,18 @@ namespace A3DPrinterControl
 			UpdateControl();
 		}
 
-		[OnDeserializing]
-		private void OnDeserializing(StreamingContext c)
+		private Brush _color = Brushes.Black;
+		[DataMember]
+		public Brush Color
 		{
-			ShapeControl = new Polyline()
+			get => _color;
+			set
 			{
-				Stroke = Brushes.Black,
-				StrokeThickness = 2
-			};
-			points = new List<Point>();
-			AuxiliaryLines = new List<AuxiliaryLine>();
+				_color = value;
+				ShapeControl.Stroke = value;
+			}
 		}
 
-
-		private double _centerX;
 		[DataMember]
 		public double PositionX
 		{
@@ -49,7 +65,6 @@ namespace A3DPrinterControl
 			}
 		}
 
-		private double _centerY;
 		[DataMember]
 		public double PositionY
 		{
@@ -65,7 +80,6 @@ namespace A3DPrinterControl
 			}
 		}
 
-		private double _axisX = 50;
 		[DataMember]
 		public double AxisX
 		{
@@ -82,7 +96,6 @@ namespace A3DPrinterControl
 			}
 		}
 
-		private double _axisY = 25;
 		[DataMember]
 		public double AxisY
 		{
@@ -99,7 +112,6 @@ namespace A3DPrinterControl
 			}
 		}
 
-		private double _startAngle = 0;
 		[DataMember]
 		public double StartAngle
 		{
@@ -116,7 +128,6 @@ namespace A3DPrinterControl
 			}
 		}
 
-		private double _endAngle = 360;
 		[DataMember]
 		public double EndAngle
 		{
@@ -133,7 +144,6 @@ namespace A3DPrinterControl
 			}
 		}
 
-		private double _rotation = 0;
 		[DataMember]
 		public double Rotation
 		{
@@ -150,7 +160,6 @@ namespace A3DPrinterControl
 			}
 		}
 
-		private double _sampleRate = 10;
 		[DataMember]
 		public double SampleRate
 		{
@@ -174,8 +183,6 @@ namespace A3DPrinterControl
 			StrokeThickness = 2
 		};
 
-		private List<Point> points = new List<Point>();
-
 		public List<Point> Vertices
 		{
 			get
@@ -189,7 +196,7 @@ namespace A3DPrinterControl
 					vertices.Add(new Point(x, y));
 				}
 
-				if(EndAngle - StartAngle == 360) vertices.Add(vertices.First());
+				if (EndAngle - StartAngle == 360) vertices.Add(vertices.First());
 
 				return vertices;
 			}
@@ -229,6 +236,18 @@ namespace A3DPrinterControl
 				double y = CADCanvas.MainCanvas.Height - (p.Y + PositionY);
 				polygon.Points.Add(new Point(x, y));
 			}
+		}
+
+		[OnDeserializing]
+		private void OnDeserializing(StreamingContext c)
+		{
+			ShapeControl = new Polyline()
+			{
+				Stroke = Brushes.Black,
+				StrokeThickness = 2
+			};
+			points = new List<Point>();
+			AuxiliaryLines = new List<AuxiliaryLine>();
 		}
 	}
 }

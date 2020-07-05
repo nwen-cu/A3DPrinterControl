@@ -36,7 +36,7 @@
 				<TextBox Grid.Row="3" Grid.Column="3" Text="{Binding Shape.PositionY}"/>
 
 				<Label Content="Points(Relative)" Grid.Row="4" Grid.ColumnSpan="4"/>
-				<DataGrid Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="3" AutoGenerateColumns="False" CanUserAddRows="True" ItemsSource="{Binding Shape.Points}" CellEditEnding="DataGrid_CellEditEnding">
+				<DataGrid Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="3" AutoGenerateColumns="False" CanUserAddRows="True" CanUserDeleteRows="True" ItemsSource="{Binding Shape.Points}" CellEditEnding="DataGrid_CellEditEnding">
 					<DataGrid.Columns>
 						<DataGridTextColumn Width="1*" Header="x" Binding="{Binding X, UpdateSourceTrigger=LostFocus}"/>
 						<DataGridTextColumn Width="1*" Header="y" Binding="{Binding Y, UpdateSourceTrigger=LostFocus}"/>
