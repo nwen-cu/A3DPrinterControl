@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Windows.Controls;
+using System.Windows.Media;
 using System.Xml.Serialization;
 
 namespace A3DPrinterControl
@@ -16,13 +17,12 @@ namespace A3DPrinterControl
 		public RectangleShapeCommand()
 		{
 			Shape = new RectangleCADShape(this);
-			RecipeViewItem = Recipe.CreateRecipeViewItem(this, "RectangleShape");
 		}
 
 		[OnDeserializing]
 		private void OnDeserializing(StreamingContext c)
 		{
-			RecipeViewItem = Recipe.CreateRecipeViewItem(this, "RectangleShape");
+
 		}
 
 		public string DescriptionName
@@ -44,10 +44,10 @@ namespace A3DPrinterControl
 		public UserControl OptionView => RectangleShapeCommandOptionView.Show(this);
 
 		[DataMember]
-		public IActionCommand ParentCommand { get; private set; } = null;
+		public IActionCommand ParentCommand { get; set; } = null;
 
 		[DataMember]
-		public List<IActionCommand> ChildrenCommands { get; private set; } = null;
+		public ActionCommandCollection ChildrenCommands { get; private set; } = new ActionCommandCollection();
 
 		public ListViewItem RecipeViewItem { get; private set; }
 
@@ -57,59 +57,16 @@ namespace A3DPrinterControl
 		[DataMember]
 		public InfillOption InfillOption { get; private set; } = new InfillOption();
 
+		public ImageSource Icon => ImageResources.Load("Icons", "RectangleShape");
+
 		public void OnAdd()
 		{
 			CADCanvas.AddShape(Shape);
 		}
 
-		public void OnCompile()
-		{
-			
-		}
-
-		public void OnMove()
-		{
-			
-		}
-
-		public void OnPause()
-		{
-			
-		}
-
-		public void OnRecipeFinish()
-		{
-			
-		}
-
-		public void OnRecipeStart()
-		{
-			
-		}
-
-		public void OnRecipeStop()
-		{
-			
-		}
-
 		public void OnRemove()
 		{
 			CADCanvas.RemoveShape(Shape);
-		}
-
-		public void OnReset()
-		{
-			
-		}
-
-		public void OnRun()
-		{
-			
-		}
-
-		public void OnStop()
-		{
-			
 		}
 
 		public void OnSelect()

@@ -20,13 +20,20 @@ namespace A3DPrinterControl.Helpers
 			scope.Set("value", value);
 
 			PyObject result = scope.Eval(Script);
+			string errorMsg;
 
-			if (result.As<bool>())
-			{ 
-				
+			try
+			{
+				errorMsg = result.As<string>();	//Expect true(bool) for valid input, an error message string for invalid input 
+			}
+			catch (InvalidCastException)
+			{
+
+				return new ValidationResult(true, null);
 			}
 
-			return new ValidationResult(default, default);
+
+			return new ValidationResult(false, errorMsg);
 		}
 	}
 }

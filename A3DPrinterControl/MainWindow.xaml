@@ -36,8 +36,8 @@
 				</RibbonGroup>
 				<RibbonGroup Header="Position"></RibbonGroup>
 				<RibbonGroup Header="Canvas">
-					<RibbonTextBox x:Name="CanvasWidthBox" Label="Width" TextChanged="CanvasWidth_TextChanged"/>
-					<RibbonTextBox x:Name="CanvasHeightBox" Label="Height" TextChanged="CanvasHeight_TextChanged"/>
+					<RibbonTextBox x:Name="CanvasWidthBox" Label="Width"/>
+					<RibbonTextBox x:Name="CanvasHeightBox" Label="Height"/>
 					<RibbonComboBox x:Name="CanvasZoomBox" Label="Zoom" IsEditable="True" >
 						<RibbonGallery SelectedValue="100%" SelectedValuePath="Content" SelectionChanged="RibbonGallery_SelectionChanged" MaxColumnCount="1">
 							<RibbonGalleryCategory>
@@ -100,9 +100,51 @@
 				<DockPanel Grid.Column="0" MinWidth="100">
 					<TabControl DockPanel.Dock="Top">
 						<TabItem Header="Recipe">
-							<ListView x:Name="RecipeView">
-								
-							</ListView>
+							<Grid>
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition/>
+									<ColumnDefinition/>
+									<ColumnDefinition/>
+									<ColumnDefinition/>
+								</Grid.ColumnDefinitions>
+								<Grid.RowDefinitions>
+									<RowDefinition Height="Auto"/>
+									<RowDefinition Height="*"/>
+								</Grid.RowDefinitions>
+								<Button Grid.Column="0" Content="↑" Click="CommandMoveUp_Click"/>
+								<Button Grid.Column="1" Content="↓" Click="CommandMoveDown_Click"/>
+								<Button Grid.Column="2" Content="←" Click="CommandLevelUp_Click"/>
+								<Button Grid.Column="3" Content="→" Click="CommandLevelDown_Click"/>
+								<TreeView x:Name="RecipeView" Grid.Row="1" Grid.ColumnSpan="4" 
+										  ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+									<TreeView.Resources>
+										<ContextMenu x:Key="RecipeViewItemContextMenu">
+											<MenuItem Header="Delete" Click="RecipeViewItemContextMenuDelete_Click"/>
+										</ContextMenu>
+									</TreeView.Resources>
+									<TreeView.ItemContainerStyle>
+										<Style TargetType="TreeViewItem">
+											<EventSetter Event="Selected" Handler="RecipeViewItem_Selected"/>
+											<Setter Property="ContextMenu" Value="{DynamicResource RecipeViewItemContextMenu}"/>
+										</Style>
+									</TreeView.ItemContainerStyle>
+									<TreeView.ItemTemplate>
+										<HierarchicalDataTemplate ItemsSource="{Binding ChildrenCommands}">
+											<Grid HorizontalAlignment="Stretch" Width="{Binding Path=ActualWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TreeView}}}">
+												<Grid.ColumnDefinitions>
+													<ColumnDefinition Width="16"/>
+													<ColumnDefinition Width="*"/>
+												</Grid.ColumnDefinitions>
+												<Grid.RowDefinitions>
+													<RowDefinition Height="24"/>
+												</Grid.RowDefinitions>
+												<Image x:Name="IconBox" Width="16" Height="16" Grid.Column="0" Source="{Binding Icon}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+												<TextBlock x:Name="NameBlock" Grid.Column="1" Text="{Binding DescriptionName}" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+											</Grid>
+										</HierarchicalDataTemplate>
+									</TreeView.ItemTemplate>
+								</TreeView>
+							</Grid>
 						</TabItem>
 						<TabItem Header="Timeline" IsEnabled="False">
 							<ScrollViewer HorizontalScrollBarVisibility="Visible">

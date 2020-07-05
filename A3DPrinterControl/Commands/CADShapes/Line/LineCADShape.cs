@@ -15,6 +15,10 @@ namespace A3DPrinterControl
 	[DataContract(IsReference = true), KnownType(typeof(LineShapeCommand))]
 	public class LineCADShape : IBindable, ICADShape
 	{
+		private double positionY;
+
+		private double endpointY;
+
 		public LineCADShape(LineShapeCommand cmd)
 		{
 			Command = cmd;
@@ -23,19 +27,19 @@ namespace A3DPrinterControl
 			EndpointX = 50;
 			EndpointY = 50;
 			Panel.SetZIndex(ShapeControl, 10);
+			UpdateControl();
 		}
 
-		[OnDeserializing]
-		private void OnDeserializing(StreamingContext c)
+		private Brush _color = Brushes.Black;
+		[DataMember]
+		public Brush Color 
 		{
-			ShapeControl = new Line()
+			get => _color;
+			set
 			{
-				Stroke = Brushes.Black,
-				StrokeThickness = 2,
-				RenderTransformOrigin = new Point(0, 1),
-				RenderTransform = new RotateTransform(0)
-			};
-			AuxiliaryLines = new List<AuxiliaryLine>();
+				_color = value;
+				ShapeControl.Stroke = value;
+			}
 		}
 
 		[DataMember]
@@ -51,7 +55,6 @@ namespace A3DPrinterControl
 			}
 		}
 
-		private double positionY;
 		[DataMember]
 		public double PositionY
 		{
@@ -59,7 +62,7 @@ namespace A3DPrinterControl
 			set
 			{
 				positionY = value;
-				(ShapeControl as Line).Y1 = CADCanvas.MainCanvas.Height - value;
+				(ShapeControl as Line).Y1 = CADCanvas.YConvertor(value);
 				OnPropertyChanged("PositionY");
 				OnPropertyChanged("Rotation");
 				OnPropertyChanged("Length");
@@ -79,7 +82,6 @@ namespace A3DPrinterControl
 			}
 		}
 
-		private double endpointY;
 		[DataMember]
 		public double EndpointY
 		{
@@ -87,7 +89,7 @@ namespace A3DPrinterControl
 			set
 			{
 				endpointY = value;
-				(ShapeControl as Line).Y2 = CADCanvas.MainCanvas.Height - value;
+				(ShapeControl as Line).Y2 = CADCanvas.YConvertor(value);
 				OnPropertyChanged("EndpointY");
 				OnPropertyChanged("Rotation");
 				OnPropertyChanged("Length");
@@ -124,7 +126,6 @@ namespace A3DPrinterControl
 			}
 		}
 
-
 		public Shape ShapeControl { get; private set; } = new Line()
 		{
 			Stroke = Brushes.Black,
@@ -147,6 +148,25 @@ namespace A3DPrinterControl
 				vertices.Add(new Point(EndpointX, EndpointY));
 				return vertices;
 			}
+		}
+
+		public void UpdateControl(object sender = null, SizeChangedEventArgs e = null)
+		{
+			PositionY = positionY;
+			EndpointY = endpointY;
+		}
+
+		[OnDeserializing]
+		private void OnDeserializing(StreamingContext c)
+		{
+			ShapeControl = new Line()
+			{
+				Stroke = Brushes.Black,
+				StrokeThickness = 2,
+				RenderTransformOrigin = new Point(0, 1),
+				RenderTransform = new RotateTransform(0)
+			};
+			AuxiliaryLines = new List<AuxiliaryLine>();
 		}
 	}
 }

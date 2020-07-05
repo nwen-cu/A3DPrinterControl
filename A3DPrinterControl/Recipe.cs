@@ -1,5 +1,7 @@
-﻿using System;
+﻿using A3DPrinterControl.Helpers;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -8,58 +10,101 @@ namespace A3DPrinterControl
 {
 	public static class Recipe
 	{
-		public static ActionCommandCollection CommandList = new ActionCommandCollection();
-		public static ListView RecipeView;
-		public static IActionCommand SelectedCommand;
+		private static UserControl DefaultOptionView = new UserControl();
+
+		public static ActionCommandCollection _commandList = new ActionCommandCollection();
+		public static ActionCommandCollection CommandList
+		{
+			get => _commandList;
+			set
+			{
+				_commandList = value;
+				Binder.OnPropertyChanged("CommandList");
+			}
+		}
+		public static TreeView RecipeView { get; set; }
+
+		private static IActionCommand _selectedCommand;
+		public static IActionCommand SelectedCommand
+		{
+			get => _selectedCommand;
+			set
+			{
+				_selectedCommand = value;
+				Binder.OnPropertyChanged("SelectedCommand");
+			}
+		}
+
+		public static RecipeBinder Binder => new RecipeBinder();
+
+		public class RecipeBinder : IBinder
+		{
+			public ActionCommandCollection CommandList
+			{
+				get => Recipe.CommandList;
+				set => Recipe.CommandList = value;
+			}
+
+			public static IActionCommand SelectedCommand
+			{
+				get => Recipe.SelectedCommand;
+				set => Recipe.SelectedCommand = value;
+			}
+		}
 
 		static Recipe()
 		{
-			RecipeView = MainWindow.Instance.FindName("RecipeView") as ListView;
+			RecipeView = MainWindow.Instance.FindName("RecipeView") as TreeView;
+			DefaultOptionView.Content = new TextBlock() { Text = "No option available for this command.", TextWrapping = TextWrapping.Wrap };
 		}
 
 		public static void AddCommand(IActionCommand command)
 		{
 			if (command == null) return;
 			CommandList.Add(command);
-			RecipeView.Items.Add(command.RecipeViewItem);
+			//RecipeView.Items.Add(command.RecipeViewItem);
 			command.OnAdd();
 		}
 
 		public static void RemoveCommand(IActionCommand command)
 		{
 			if (command == null) return;
-			if (CommandList.Contains(command))
+			if (SelectedCommand == command)
 			{
-				if (SelectedCommand == command)
-				{
-					CommandDeselected(command);
-				}
+				CommandDeselected(command);
+			}
+			command.ChildrenCommands.ForEach(cmd => RemoveCommand(cmd));
+			command.OnRemove();
+			if (command.ParentCommand == null)
+			{
 				CommandList.Remove(command);
-				RecipeView.Items.Remove(command.RecipeViewItem);
-				command.OnRemove();
+			}
+			else
+			{
+				command.ParentCommand.ChildrenCommands.Remove(command);
 			}
 		}
 
-		public static void ClearCommand()
+		public static void ClearCommand(ActionCommandCollection list)
 		{
 			MainWindow.CommandOptionContainer.Children.Clear();
-			while (CommandList.Count > 0)
+			while (list.Count > 0)
 			{
-				RecipeView.Items.Remove(CommandList[0].RecipeViewItem);
-				CommandList[0].OnRemove();
-				CommandList.RemoveAt(0);
+				RemoveCommand(list[0]);
 			}
 		}
 
 		public static void CommandSelected(IActionCommand command)
 		{
 			if (command == null) return;
+			if (SelectedCommand != null) CommandDeselected(SelectedCommand);
+			SelectedCommand = command;
 			MainWindow.CommandOptionContainer.Children.Clear();
-			MainWindow.CommandOptionContainer.Children.Add(command.OptionView);
+			MainWindow.CommandOptionContainer.Children.Add(command.OptionView ?? DefaultOptionView);
 			if (command.GetType().GetInterface("IMotion") != null)
 			{
 				MainWindow.MotionOptionContainer.Children.Clear();
-				MainWindow.MotionOptionContainer.Children.Add((command as IMotion).MotionOption.OptionView);
+				MainWindow.MotionOptionContainer.Children.Add((command as IMotion)?.MotionOption?.OptionView ?? DefaultOptionView);
 				MainWindow.MotionOptionTabpage.IsEnabled = true;
 			}
 			else
@@ -70,7 +115,7 @@ namespace A3DPrinterControl
 			if (command.GetType().GetInterface("IInfill") != null)
 			{
 				MainWindow.InfillOptionContainer.Children.Clear();
-				MainWindow.InfillOptionContainer.Children.Add((command as IInfill).InfillOption.OptionView);
+				MainWindow.InfillOptionContainer.Children.Add((command as IInfill)?.InfillOption?.OptionView ?? DefaultOptionView);
 				MainWindow.InfillOptionTabpage.IsEnabled = true;
 			}
 			else
@@ -78,6 +123,7 @@ namespace A3DPrinterControl
 				MainWindow.OptionTabContainer.SelectedIndex = 0;
 				MainWindow.InfillOptionTabpage.IsEnabled = false;
 			}
+			command.OnSelect();
 			if (command is IShapeCommand scommand)
 			{
 				scommand.Shape.OnSelect();
@@ -87,45 +133,112 @@ namespace A3DPrinterControl
 		public static void CommandDeselected(IActionCommand command)
 		{
 			if (command == null) return;
+			command.OnDeselect();
 			if (command is IShapeCommand scommand)
 			{
 				scommand.Shape.OnDeselect();
 			}
+			SelectedCommand = null;
 		}
 
-		public static ListViewItem CreateRecipeViewItem(IActionCommand cmd, string iconImage)
+		public static void CommandMoveUp(IActionCommand command)
 		{
-			ListViewItem item = new ListViewItem();
-
-			item.Tag = cmd;
-
-			item.Content = new StackPanel() { Orientation = Orientation.Horizontal };
-			(item.Content as StackPanel).Children.Add(new Image() { Width = 16, Height = 16, Source = ImageResources.Load("Icons", iconImage) });
-			TextBlock text = new TextBlock();
-			text.SetBinding(TextBlock.TextProperty, "DescriptionName");
-			text.DataContext = cmd;
-			(item.Content as StackPanel).Children.Add(text);
-
-			item.Selected += RecipeViewItem_Selected;
-			item.ContextMenu = new ContextMenu();
-			MenuItem del = new MenuItem() { Header = "Delete", Tag = cmd };
-			item.ContextMenu.Items.Add(del);
-			del.Click += RecipeViewItemContextMenuDelete_Click;
-
-			return item;
+			if (command.GetType().GetInterface("IManagedCommand") != null) return;
+			if (command.ParentCommand == null)
+			{
+				int index = CommandList.IndexOf(command);
+				if (index < 1) return;
+				CommandList.Remove(command);
+				CommandList.Insert(index - 1, command);
+				(RecipeView.ItemContainerGenerator.ContainerFromItem(command) as TreeViewItem).IsSelected = true;
+			}
+			else
+			{
+				int index = command.ParentCommand.ChildrenCommands.IndexOf(command);
+				if (index < 1) return;
+				command.ParentCommand.ChildrenCommands.Remove(command);
+				command.ParentCommand.ChildrenCommands.Insert(index - 1, command);
+			}
 		}
 
-		private static void RecipeViewItem_Selected(object sender, RoutedEventArgs e)
+		public static void CommandMoveDown(IActionCommand command)
 		{
-			SelectedCommand?.OnDeselect();
-			SelectedCommand = (sender as ListViewItem).Tag as IActionCommand;
-			CommandSelected(SelectedCommand);
-			SelectedCommand.OnSelect();
+			if (command.GetType().GetInterface("IManagedCommand") != null) return;
+			if (command.ParentCommand == null)
+			{
+				int index = CommandList.IndexOf(command);
+				if (index == CommandList.Count - 1) return;
+				CommandList.Remove(command);
+				CommandList.Insert(index + 1, command);
+				(RecipeView.ItemContainerGenerator.ContainerFromItem(command) as TreeViewItem).IsSelected = true;
+			}
+			else
+			{
+				int index = command.ParentCommand.ChildrenCommands.IndexOf(command);
+				if (index == command.ParentCommand.ChildrenCommands.Count - 1) return;
+				command.ParentCommand.ChildrenCommands.Remove(command);
+				command.ParentCommand.ChildrenCommands.Insert(index + 1, command);
+			}
 		}
 
-		private static void RecipeViewItemContextMenuDelete_Click(object sender, RoutedEventArgs e)
+		public static void CommandLevelUp(IActionCommand command)
 		{
-			RemoveCommand((sender as FrameworkElement).Tag as IActionCommand);
+			if (command.GetType().GetInterface("IManagedCommand") != null) return;
+			if (command.ParentCommand == null) return;
+			else if (command.ParentCommand.ParentCommand == null)
+			{
+				int index = CommandList.IndexOf(command.ParentCommand);
+				command.ParentCommand.ChildrenCommands.Remove(command);
+				CommandList.Insert(index + 1, command);
+				command.ParentCommand = null;
+			}
+			else
+			{
+				int index = command.ParentCommand.ParentCommand.ChildrenCommands.IndexOf(command.ParentCommand);
+				command.ParentCommand.ChildrenCommands.Remove(command);
+				command.ParentCommand.ParentCommand.ChildrenCommands.Insert(index + 1, command);
+				command.ParentCommand = command.ParentCommand.ParentCommand;
+			}
+			FindRecipeViewItem(command).IsSelected = true;
+		}
+
+		public static void CommandLevelDown(IActionCommand command)
+		{
+			if (command.GetType().GetInterface("IManagedCommand") != null) return;
+			if (command.ParentCommand == command.PreviousCommand) return;
+			
+			IActionCommand parent = command.PreviousCommand;
+
+			while (parent.ParentCommand != command.ParentCommand)
+			{
+				parent = parent.PreviousCommand;
+			}
+			if (command.ParentCommand == null)
+			{
+				CommandList.Remove(command);
+			}
+			else
+			{
+				command.ParentCommand.ChildrenCommands.Remove(command);
+			}
+			command.ParentCommand = parent;
+			parent.ChildrenCommands.Add(command);
+
+			parent = command.ParentCommand;
+			while (parent != null)
+			{
+				if (RecipeView.ItemContainerGenerator.ContainerFromItem(parent) is TreeViewItem item)
+				{
+					item.IsExpanded = true;
+				}
+				parent = parent.ParentCommand;
+			}
+			FindRecipeViewItem(command).IsSelected = true;
+		}
+
+		public static TreeViewItem FindRecipeViewItem(IActionCommand command)
+		{
+			return TreeViewHelper.FindTreeViewItem(RecipeView, command);
 		}
 	}
 }

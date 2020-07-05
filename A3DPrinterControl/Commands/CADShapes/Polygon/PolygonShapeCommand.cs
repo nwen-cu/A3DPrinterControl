@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace A3DPrinterControl 
 {
@@ -17,14 +18,13 @@ namespace A3DPrinterControl
 
 		public PolygonShapeCommand()
 		{
-			Shape = new PolygonCADShape(this);
-			RecipeViewItem = Recipe.CreateRecipeViewItem(this, "PolygonShape");
+			Shape = new PolygonCADShape(this); 
 		}
 
 		[OnDeserializing]
 		private void OnDeserializing(StreamingContext c)
 		{
-			RecipeViewItem = Recipe.CreateRecipeViewItem(this, "PolygonShape");
+
 		}
 
 		public string DescriptionName
@@ -44,10 +44,10 @@ namespace A3DPrinterControl
 		public UserControl OptionView => PolygonShapeCommandOptionView.Show(this);
 
 		[DataMember]
-		public IActionCommand ParentCommand { get; private set; } = null;
+		public IActionCommand ParentCommand { get; set; } = null;
 
 		[DataMember]
-		public List<IActionCommand> ChildrenCommands { get; private set; } = null;
+		public ActionCommandCollection ChildrenCommands { get; private set; } = new ActionCommandCollection();
 
 		[DataMember]
 		public MotionOption MotionOption { get; private set; } = new MotionOption();
@@ -55,61 +55,18 @@ namespace A3DPrinterControl
 		[DataMember]
 		public InfillOption InfillOption { get; private set; } = new InfillOption();
 
+		public ImageSource Icon => ImageResources.Load("Icons", "PolygonShape");
+
 		public void OnAdd()
 		{
 			CADCanvas.AddShape(Shape);
 			CADCanvas.MainCanvas.SizeChanged += (Shape as PolygonCADShape).UpdateControl;
 		}
 
-		public void OnCompile()
-		{
-			
-		}
-
-		public void OnMove()
-		{
-			
-		}
-
-		public void OnPause()
-		{
-			
-		}
-
-		public void OnRecipeFinish()
-		{
-			
-		}
-
-		public void OnRecipeStart()
-		{
-			
-		}
-
-		public void OnRecipeStop()
-		{
-			
-		}
-
 		public void OnRemove()
 		{
 			CADCanvas.RemoveShape(Shape);
 			CADCanvas.MainCanvas.SizeChanged -= (Shape as PolygonCADShape).UpdateControl;
-		}
-
-		public void OnReset()
-		{
-			
-		}
-
-		public void OnRun()
-		{
-			
-		}
-
-		public void OnStop()
-		{
-			
 		}
 
 		public void OnSelect()

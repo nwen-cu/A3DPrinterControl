@@ -45,8 +45,25 @@ namespace A3DPrinterControl
 			InfillOptionTabpage = FindName("InfillOptionTab") as TabItem;
 			InfillOptionContainer = FindName("InfillOptionPanel") as Grid;
 			MainController.Initialize();
-			CanvasWidthBox.Text = 300.ToString();
-			CanvasHeightBox.Text = 300.ToString();
+			InitializeLateBinding();
+			CADCanvas.InitializeCanvas();
+		}
+
+		public void InitializeLateBinding()
+		{
+			CanvasWidthBox.SetBinding(TextBox.TextProperty, new Binding("CanvasWidth"));
+			CanvasWidthBox.DataContext = CADCanvas.Binder;
+
+			CanvasHeightBox.SetBinding(TextBox.TextProperty, new Binding("CanvasHeight"));
+			CanvasHeightBox.DataContext = CADCanvas.Binder;
+
+			RecipeView.SetBinding(ItemsControl.ItemsSourceProperty, new Binding("CommandList"));
+			RecipeView.DataContext = Recipe.Binder;
+		}
+
+		public void InitializeExternalEventHandler()
+		{ 
+			
 		}
 
 		public void ShapeHighlight(object sender, MouseEventArgs e)
@@ -77,6 +94,7 @@ namespace A3DPrinterControl
 
 		private void TestButton_Click(object sender, RoutedEventArgs e)
 		{
+			//Serializer
 			Debug.Log("");
 			DataContractSerializer serializer = new DataContractSerializer(typeof(ActionCommandCollection));
 			MemoryStream ms = new MemoryStream();
@@ -85,11 +103,37 @@ namespace A3DPrinterControl
 			ms.Seek(0, SeekOrigin.Begin);
 			Debug.Log(sr.ReadToEnd());
 			ms.Seek(0, SeekOrigin.Begin);
-			Recipe.ClearCommand();
-			MessageBox.Show("!");
-			ActionCommandCollection acc = serializer.ReadObject(ms) as ActionCommandCollection;
-			acc.ForEach(cmd => Recipe.AddCommand(cmd));
+			//Recipe.ClearCommand();
 			sr.Close();
+
+			//Add tree
+			Recipe.AddCommand(new LineShapeCommand());
+			Recipe.CommandList[0].ChildrenCommands.Add(new RectangleShapeCommand());
+			Recipe.CommandList[0].ChildrenCommands.Add(new PolygonShapeCommand()); 
+			Recipe.CommandList[0].ChildrenCommands[0].ChildrenCommands.Add(new RectangleShapeCommand());
+			Recipe.CommandList[0].ChildrenCommands[0].ChildrenCommands.Add(new PolygonShapeCommand());
+
+
+		}
+
+		private void CommandMoveUp_Click(object sender, RoutedEventArgs e)
+		{
+			Recipe.CommandMoveUp(Recipe.SelectedCommand);
+		}
+
+		private void CommandMoveDown_Click(object sender, RoutedEventArgs e)
+		{
+			Recipe.CommandMoveDown(Recipe.SelectedCommand);
+		}
+
+		private void CommandLevelUp_Click(object sender, RoutedEventArgs e)
+		{
+			Recipe.CommandLevelUp(Recipe.SelectedCommand);
+		}
+
+		private void CommandLevelDown_Click(object sender, RoutedEventArgs e)
+		{
+			Recipe.CommandLevelDown(Recipe.SelectedCommand);
 		}
 
 		private void PrimitiveLine_Click(object sender, RoutedEventArgs e)
@@ -116,11 +160,6 @@ namespace A3DPrinterControl
 			Recipe.AddCommand(cmd);
 		}
 
-		private void TreeViewItem_Selected(object sender, RoutedEventArgs e)
-		{
-			
-		}
-
 		private void CanvasWidth_TextChanged(object sender, TextChangedEventArgs e)
 		{
 			if (double.TryParse((sender as RibbonTextBox).Text, out double result))
@@ -136,21 +175,6 @@ namespace A3DPrinterControl
 			}
 		}
 
-		private void RecipeListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
-		{
-			e.Handled = true;
-		}
-
-		private void ListViewItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-		{
-			MessageBox.Show(CADCanvas.Container.Children.Count.ToString());
-		}
-
-		private void Polygon_MouseDown(object sender, MouseButtonEventArgs e)
-		{
-			MessageBox.Show((sender as Polygon).Points.ToString());
-		}
-
 		private void RibbonGallery_SelectionChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
 		{
 			if (double.TryParse((sender as RibbonGallery).SelectedValue.ToString().Replace("%", ""), out double result))
@@ -161,7 +185,7 @@ namespace A3DPrinterControl
 
 		private void RibbonMenuNew_Click(object sender, RoutedEventArgs e)
 		{
-			Recipe.ClearCommand();
+			Recipe.ClearCommand(Recipe.CommandList);
 		}
 
 		private void RibbonMenuLoad_Click(object sender, RoutedEventArgs e)
@@ -173,7 +197,7 @@ namespace A3DPrinterControl
 			FileStream fs = new FileStream(fd.FileName, FileMode.Open);
 			ActionCommandCollection rcp = serializer.ReadObject(fs) as ActionCommandCollection;
 			fs.Close();
-			rcp.ForEach(cmd => Recipe.AddCommand(cmd));
+			rcp.ToList().ForEach(cmd => Recipe.AddCommand(cmd));
 		}
 
 		private void RibbonMenuSave_Click(object sender, RoutedEventArgs e)
@@ -185,6 +209,18 @@ namespace A3DPrinterControl
 			FileStream fs = new FileStream(fd.FileName, FileMode.Create);
 			serializer.WriteObject(fs, Recipe.CommandList);
 			fs.Close();
+		}
+
+		private void RecipeViewItem_Selected(object sender, RoutedEventArgs e)
+		{
+			Recipe.CommandSelected((sender as TreeViewItem).DataContext as IActionCommand);
+			e.Handled = true;
+		}
+
+		private void RecipeViewItemContextMenuDelete_Click(object sender, RoutedEventArgs e)
+		{
+			Recipe.RemoveCommand((((sender as MenuItem).Parent as ContextMenu).PlacementTarget as TreeViewItem).DataContext as IActionCommand);
+			e.Handled = true;
 		}
 	}
 }
